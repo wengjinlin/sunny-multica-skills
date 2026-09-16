@@ -7,3 +7,4 @@
 | 仓库地址 | 只要这些 skill（留空 = 全部） |
 |---|---|
 | https://github.com/Fission-AI/OpenSpec | |
+| https://github.com/wengjinlin/sunny-multica-skills | |
