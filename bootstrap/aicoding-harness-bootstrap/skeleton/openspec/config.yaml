@@ -1,0 +1,15 @@
+schema: spec-driven
+tdd_enforcement: strict
+ordering: strict
+model_routing_hints:
+  explore: haiku
+  propose: opus
+  apply: sonnet
+  review: opus
+protected_paths:
+  - "**/application.yml"
+  - "**/application-*.yml"
+  - "**/db/**"
+  - "**/sql/**"
+  - "**/settings.xml"
+  - "**/pom.xml"
