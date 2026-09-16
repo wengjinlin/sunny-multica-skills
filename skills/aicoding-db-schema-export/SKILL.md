@@ -1,11 +1,11 @@
 ---
-name: db-schema-export
+name: aicoding-db-schema-export
 description: 连活库导出表结构（表/列/索引/主键/外键/注释），生成或重生成 docs/database/ 文档。脚本导出保证结果一致性，不临时手写连接与 SQL。TRIGGER：「导出数据库表结构」「生成/重生成数据库文档」「DDL 执行后刷新表文档」。
 ---
 
-# db-schema-export：数据库表结构文档导出
+# aicoding-db-schema-export：数据库表结构文档导出
 
-**定位**：`docs/database/` 的唯一生成通道——初建（harness-bootstrap 第 2 步）与 DDL 人工执行后的重生成（change 收尾 task）都走本 skill。**禁止**临时手写数据库连接代码或 SQL 导出（方言差异多、结果不一致、配置问题会反复踩坑）。
+**定位**：`docs/database/` 的唯一生成通道——初建（aicoding-harness-bootstrap 第 2 步）与 DDL 人工执行后的重生成（change 收尾 task）都走本 skill。**禁止**临时手写数据库连接代码或 SQL 导出（方言差异多、结果不一致、配置问题会反复踩坑）。
 
 ## 产物与格式权威源
 
@@ -82,7 +82,7 @@ python temp/dump_schema.py \
 - `docs/database/index.md` 域清单计数与 `tables/<域>.md` 实际表数一致
 - `grep -rn "TODO\|FIXME\|待补" docs/database/` 无残留占位
 - 删除 `temp/schema_dump.json`（脚本保留可复用，反正 temp/ 不进 git）
-- 变更文件 commit + push 到当前 change 的 feature 分支（初建时随 harness-bootstrap 提交）
+- 变更文件 commit + push 到当前 change 的 feature 分支（初建时随 aicoding-harness-bootstrap 提交）
 
 ## 无 DB 连接降级
 

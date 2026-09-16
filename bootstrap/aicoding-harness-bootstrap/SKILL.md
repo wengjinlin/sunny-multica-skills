@@ -1,9 +1,9 @@
 ---
-name: harness-bootstrap
+name: aicoding-harness-bootstrap
 description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/文档/hooks/openspec）→ 代码分析填充 → feature 分支 push → 人工 MR。TRIGGER：「建设仓库 harness」「初始化新项目仓库」「铺 harness」。骨架在 skeleton/，项目内容靠代码分析生成。不建仓库侧 skills 与 commands（skill 全在 Multica 侧维护）。
 ---
 
-# harness-bootstrap：新仓库 harness 建设
+# aicoding-harness-bootstrap：新仓库 harness 建设
 
 **范围声明**：
 - **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/index.md` / `docs/lessons/{index.md + 各角色 md}` / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
@@ -98,4 +98,4 @@ openspec/config.yaml
 ## 维护约定
 
 - `skeleton/` 是**结构**权威源：harness 章节布局变更须回写；项目内容演进不回写（那是各仓库自己的 MR）
-- 与其他 bootstrap 的边界：角色/编排/Multica 项目配置分别归 agent-bootstrap / orchestration-bootstrap / project-init，本 skill 只管仓库内文件
+- 与其他 bootstrap 的边界：角色/编排/Multica 项目配置分别归 aicoding-agent-bootstrap / aicoding-orchestration-bootstrap / aicoding-project-init，本 skill 只管仓库内文件

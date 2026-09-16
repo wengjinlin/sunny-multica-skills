@@ -1,20 +1,20 @@
 ---
-name: project-init
+name: aicoding-project-init
 description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 token 注入，自动验证，验证通过后创建 project 并绑定仓库资源。TRIGGER：用户要求「初始化项目 / 建项目绑仓库 / 配置 GitLab 集成 / 新工作区建项目」时使用。人工清单与验证流程在本文，项目描述模板在 project.md。
 ---
 
-# project-init：人工集成 → 自动验证 → 建项目
+# aicoding-project-init：人工集成 → 自动验证 → 建项目
 
 本 skill 串联三类事项：**人工网页操作**（GitLab 连接 / webhook / token）→ **自动验证**（通过 DevOps 一次性任务）→ **自动建项目**（create + 资源绑定 + description 模板）。
 
-前置依赖：agent-bootstrap 已跑完（验证环节需要 DevOps agent 及其 GITLAB_TOKEN）。
+前置依赖：aicoding-agent-bootstrap 已跑完（验证环节需要 DevOps agent 及其 GITLAB_TOKEN）。
 
 ## 执行流程
 
 ### 第 0 步：前置检查（幂等探测）
 
 1. `multica runtime list --output json` 确认 runtime 可用
-2. `multica agent list --output json` 确认 **DevOps** 存在并记下 UUID（不存在 → 提示先跑 agent-bootstrap，终止）
+2. `multica agent list --output json` 确认 **DevOps** 存在并记下 UUID（不存在 → 提示先跑 aicoding-agent-bootstrap，终止）
 3. `multica project list --output json` 探测同名 project：已存在 → 进入**对齐模式**（只补资源绑定与 description，不重建），记下 project-id
 4. 向用户确认：项目名 / 仓库 URL（下称 REPO_URL）
 
@@ -81,7 +81,7 @@ multica agent env set <DevOps-UUID> --custom-env-file <文件>
 
 - 项目 UUID + 可导航链接格式：`[<项目名>](mention://project/<project-id>)`
 - 验证证据摘要（DevOps 回报的 whoami / hook 状态）
-- 后续提示（未完成层提醒）：仓库 harness 重建（harness-kit）、编排层（orchestration-bootstrap）、角色层（agent-bootstrap）
+- 后续提示（未完成层提醒）：仓库 harness 重建（aicoding-harness-bootstrap）、编排层（aicoding-orchestration-bootstrap）、角色层（aicoding-agent-bootstrap）
 
 ## 铁律
 

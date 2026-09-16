@@ -1,9 +1,9 @@
 ---
-name: agent-bootstrap
+name: aicoding-agent-bootstrap
 description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGER：用户要求「复现/迁移/批量创建 agent」「按 agents 目录建 agent」「部署 agent 层」时使用。框架本身不含 agent 内容——每个 agent 的配置维护在本 skill 的 agents/ 目录下，一个文件一个 agent，文件数即创建数。
 ---
 
-# agent-bootstrap：按配置文件批量创建 agent
+# aicoding-agent-bootstrap：按配置文件批量创建 agent
 
 本 skill 是**创建框架**：读取 `agents/` 目录下的配置文件，逐个创建 agent 并应用全部配置。agent 内容不写死在框架里——增删角色 = 增删 `agents/*.md` 文件。
 
@@ -39,7 +39,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 1. `multica runtime list --output json` 取 runtime-id（本工作区需已 setup daemon）
 2. `multica agent list --output json` 找到本工作区 Mika 的 UUID，记为 **NEW_MIKA_ID**
 3. `multica agent list` 记录现有 agent 名单（幂等基准）
-4. **项目前置校验**：`multica project list --output json` 确认项目已创建且已绑定仓库资源——agent 指令是项目无关的角色契约，项目上下文靠「项目描述注入 + 运行时读仓库文档」获得，项目未建则该链路断。未建/未绑 → 报告提醒「先跑 project-init」，**不阻断**（铁律：不中断批处理）
+4. **项目前置校验**：`multica project list --output json` 确认项目已创建且已绑定仓库资源——agent 指令是项目无关的角色契约，项目上下文靠「项目描述注入 + 运行时读仓库文档」获得，项目未建则该链路断。未建/未绑 → 报告提醒「先跑 aicoding-project-init」，**不阻断**（铁律：不中断批处理）
 5. 列出本 skill `agents/` 目录全部 `*.md` —— 文件数 = 待创建数，逐个处理
 
 ### 第 1 步：逐文件创建

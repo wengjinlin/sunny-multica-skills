@@ -31,7 +31,7 @@
 |---|---|---|---|---|
 | {{AGENT_ROW}} | {{...}} | {{...}} | {{...}} | {{...}} |
 
-<!-- 分析指引：从 Multica 侧 agent-bootstrap 建立的角色对齐（multica agent list）；此表是仓库侧字典，变更须回写 -->
+<!-- 分析指引：从 Multica 侧 aicoding-agent-bootstrap 建立的角色对齐（multica agent list）；此表是仓库侧字典，变更须回写 -->
 
 ---
 

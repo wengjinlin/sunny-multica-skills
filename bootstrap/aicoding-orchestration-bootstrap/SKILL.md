@@ -1,9 +1,9 @@
 ---
-name: orchestration-bootstrap
+name: aicoding-orchestration-bootstrap
 description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编排接力入口）。TRIGGER：用户要求「复现/迁移编排层」「建巡检兜底」「配置编排接力」时使用。框架不含剧本内容——巡检剧本维护在本 skill 的 autopilot.md，Mika 入口规则维护在 mika-instructions.md。
 ---
 
-# orchestration-bootstrap：复现编排层
+# aicoding-orchestration-bootstrap：复现编排层
 
 编排层只有两个组件，本 skill 各配置一个：
 
@@ -12,7 +12,7 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 | 巡检兜底 autopilot | `autopilot.md`（30 分钟 cron，run_only，assignee=Mika） | autopilot 的 description |
 | Mika 编排接力入口 | `mika-instructions.md`（`{{AUTOPILOT_ID}}` 占位符） | Mika 自定义 instructions 的「工作区补充」节 |
 
-主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Architect/…）由 agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 agent-bootstrap。
+主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Architect/…）由 aicoding-agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 aicoding-agent-bootstrap。
 
 ## 执行流程
 
@@ -47,7 +47,7 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 
 - autopilot：新 UUID（或「已存在 → 已同步剧本」）/ cron 表达式 / mode=run_only / assignee=Mika
 - Mika：instructions 长度前后对比 / 「工作区补充：编排接力」节已写入（含真实 AUTOPILOT_ID）
-- 补充说明：角色 agent 层需另跑 agent-bootstrap skill；编排逻辑后续修改直接改 autopilot 的 description（权威源），改完回写本 skill 的 `autopilot.md` 防漂移
+- 补充说明：角色 agent 层需另跑 aicoding-agent-bootstrap skill；编排逻辑后续修改直接改 autopilot 的 description（权威源），改完回写本 skill 的 `autopilot.md` 防漂移
 
 ## 维护约定
 

@@ -1,5 +1,5 @@
 ---
-name: importing-skills
+name: aicoding-skills-bootstrap
 description: "当用户要求把 GitHub 仓库中的 skill 拉取/导入/同步到当前 Multica 工作区技能库时使用——支持整个仓库、仓库内指定目录、或只导入其中特定的几个 skill。触发词：拉取 skill、导入 skill、import skills、批量安装技能、同步 skill 仓库。"
 ---
 
