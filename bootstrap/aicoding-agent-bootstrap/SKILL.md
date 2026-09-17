@@ -79,7 +79,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 ## 缺失内容登记
 | agent | 缺失项 | 类型 | 补齐命令 |
 |---|---|---|---|
-| Architect | aicoding-config-auth-resource-v2 | skill | multica skill import <zip或URL> 后：multica agent skills add <该agent的UUID> --skill-ids <补导后的id> |
+| PM | aicoding-config-auth-resource-v2 | skill | multica skill import <zip或URL> 后：multica agent skills add <该agent的UUID> --skill-ids <补导后的id> |
 | ... | ... | mcp | multica agent update <UUID> --mcp-config-file <file> |
 
 统计：N/M 个 agent 创建（或已存在）；K 项分配缺失（skill X 项 / mcp Y 项）

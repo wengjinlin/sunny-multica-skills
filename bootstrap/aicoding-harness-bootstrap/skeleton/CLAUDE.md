@@ -142,7 +142,7 @@ proposal → specs → design → tasks
 ## 14. 平台能力帮助文档（docs/help/）
 
 - **涉及平台集成的需求（{{CAPABILITY_LIST}}）**：先读 `docs/help/index.md` 能力清单，再读对应能力文档，按文档方式实现
-- **适用时点**：PM 写 proposal（技术可行性）、Architect 写 design（HOW 与超时/重试/降级策略）、Developer 实现前、Reviewer 审查时——均按此路由
+- **适用时点**：PM 写 proposal/design（技术可行性与 HOW、超时/重试/降级策略）、Developer 实现前、Reviewer 审查时——均按此路由
 - `index.md` 的「通用约定」与「受保护/慎用清单」视同宪法红线，违反会被 Reviewer 打回
 - 新平台能力的使用经验：可复用的做法补 `docs/help/` 对应文档；一次性踩坑进 `docs/lessons/` 对应角色文件
 

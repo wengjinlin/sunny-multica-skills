@@ -20,7 +20,7 @@ visibility: workspace
 
 ## 角色职责
 
-接收 Architect 的 handoff（stage 3） → 读 design.md → 拆 tasks.md + DAG + 排他文件清单。**不写代码**。
+接收 PM 的 handoff（stage 2，人审通过后触发） → 读 proposal/specs/design（含组件对照表与侵入面清单） → 拆 tasks.md + DAG + 排他文件清单。**不写代码**。
 
 ## Git 策略（分支级权限）
 

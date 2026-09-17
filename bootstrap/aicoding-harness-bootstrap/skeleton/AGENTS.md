@@ -64,10 +64,10 @@ openspec/changes/{change-id}/
 
 | 触发 | 下游义务 | 执行方式 |
 |---|---|---|
-| PM 修改 proposal.md（已 in_review 之后） | Architect 必须 re-specs + re-design | PM 在原 issue 评论贴新版本 + @mention Architect；Mika 把下游所有 stage 子 issue 置 `blocked`，等重做后解锁 |
-| Architect 修改 specs/design（已 in_review 之后） | Tech-Lead 必须 re-tasks | 同上，Architect @mention Tech-Lead + Mika 阻塞 stage≥3 子 issue |
-| Architect 产出 ddl.sql（建表/加字段） | 人工在库上执行 DDL 后流程才可继续；受影响域数据库文档须在本 change 内重生成 | 人工执行后评论回执 @Mika；Mika 置 `ddl=executed` 并解锁 stage≥3（Developer 测试依赖表结构先存在）；Tech-Lead 的 tasks.md 必含「按 docs/database/index.md 再生成规则重生成受影响域表文档」task |
-| Developer 实施时发现 design 漏字段 | 反向触发 Architect | Developer 不得擅自扩边界：task issue 评论 + status `blocked` + @mention Mika，由 Mika 决定是否回退 |
+| PM 修改 proposal.md（已 in_review 之后） | PM 串联返工 specs + design | PM 在原 issue 评论贴新版本；Mika 把下游所有 stage 子 issue 置 `blocked`，等重做后解锁 |
+| PM 修改 specs/design（已 in_review 之后） | Tech-Lead 必须 re-tasks | 同上，PM 评论贴新版本 + Mika 阻塞 stage≥2 子 issue（Tech-Lead 由 Mika 点火） |
+| PM 产出 ddl.sql（建表/加字段） | 人工在库上执行 DDL 后流程才可继续；受影响域数据库文档须在本 change 内重生成 | 人工执行后评论回执 @Mika；Mika 置 `ddl=executed` 并解锁 stage≥2（Developer 测试依赖表结构先存在）；Tech-Lead 的 tasks.md 必含「按 docs/database/index.md 再生成规则重生成受影响域表文档」task |
+| Developer 实施时发现 design 漏字段 | 反向触发 PM | Developer 不得擅自扩边界：task issue 评论 + status `blocked` + @mention Mika，由 Mika 决定是否回退 |
 
 ---
 

@@ -12,7 +12,7 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 | 巡检兜底 autopilot | `autopilot.md`（30 分钟 cron，run_only，assignee=Mika） | autopilot 的 description |
 | Mika 编排接力入口 | `mika-instructions.md`（`{{AUTOPILOT_ID}}` 占位符） | Mika 自定义 instructions 的「工作区补充」节 |
 
-主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Architect/…）由 aicoding-agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 aicoding-agent-bootstrap。
+主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Tech-Lead/…）由 aicoding-agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 aicoding-agent-bootstrap。
 
 ## 执行流程
 

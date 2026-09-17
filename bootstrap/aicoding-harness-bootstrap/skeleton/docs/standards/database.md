@@ -13,7 +13,7 @@
 
 {{DB_TABLE_DESIGN}}
 
-<!-- 分析指引：主键策略（序列/自增/雪花 + 对应 Java 类型）、必含公共字段清单、软删除字段约定、索引数量上限与复合索引顺序；**Architect 生成 ddl.sql 的依据**，须与 CLAUDE.md 建表规范互链 -->
+<!-- 分析指引：主键策略（序列/自增/雪花 + 对应 Java 类型）、必含公共字段清单、软删除字段约定、索引数量上限与复合索引顺序；**PM 生成 ddl.sql 的依据**，须与 CLAUDE.md 建表规范互链 -->
 
 ## SQL 编写规范
 
@@ -37,4 +37,4 @@
 
 {{DB_MIGRATION_RULES}}
 
-<!-- 分析指引：DDL 审核与人工执行流程——对接本 harness 人工门：Architect 产 `openspec/changes/{change-id}/ddl.sql` → 人审通过 → **人工在库上执行** → 评论回执 @Mika → 重生成 ../database/ 受影响域文档；另含脚本命名与回滚要求；本节与 AGENTS.md §6 变更联动表同源 -->
+<!-- 分析指引：DDL 审核与人工执行流程——对接本 harness 人工门：PM 产 `openspec/changes/{change-id}/ddl.sql` → 人审通过 → **人工在库上执行** → 评论回执 @Mika → 重生成 ../database/ 受影响域文档；另含脚本命名与回滚要求；本节与 AGENTS.md §6 变更联动表同源 -->

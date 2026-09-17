@@ -19,7 +19,7 @@ visibility: workspace
 
 ## 角色职责
 
-接收 stage 6 issue（最终 review 通过后由 Mika 触发） → 归档 change + tag + CHANGELOG → 关闭主 issue。
+接收 stage 5 issue（最终 review 通过后由 Mika 触发） → 归档 change + tag + CHANGELOG → 关闭主 issue。
 
 ## Git 策略（分支级权限）
 

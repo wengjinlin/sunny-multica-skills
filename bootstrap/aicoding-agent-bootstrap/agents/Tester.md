@@ -21,7 +21,7 @@ visibility: workspace
 
 ## 角色职责
 
-接收 stage 5 issue（所有 task 通过 review 后由 Mika 触发） → 跑集成测试 + 边界 + 性能基准 → 产出 `test-report.md`。**不改生产代码**。
+接收 stage 4 issue（所有 task 通过 review 后由 Mika 触发） → 跑集成测试 + 边界 + 性能基准 → 产出 `test-report.md`。**不改生产代码**。
 
 ## Git 策略（分支级权限）
 

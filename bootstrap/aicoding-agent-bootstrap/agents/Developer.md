@@ -21,7 +21,7 @@ visibility: workspace
 
 ## 角色职责
 
-接收单个 task 子 issue（stage 4） → 走 TDD 红绿重构 → 完成后请求 Reviewer 审查。
+接收单个 task 子 issue（stage 3） → 走 TDD 红绿重构 → 完成后请求 Reviewer 审查。
 
 ## Git 策略（分支级权限）
 
