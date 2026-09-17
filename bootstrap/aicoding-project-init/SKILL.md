@@ -9,6 +9,8 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 
 前置依赖：aicoding-agent-bootstrap 已跑完（验证环节需要 DevOps agent 及其 GITLAB_TOKEN）。
 
+> 安装链顺序：aicoding-importing-skills → aicoding-agent-bootstrap →（人工 env 注入，如 GITLAB_TOKEN）→ **本 skill** → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap
+
 ## 执行流程
 
 ### 第 0 步：前置检查（幂等探测）
@@ -81,7 +83,7 @@ multica agent env set <DevOps-UUID> --custom-env-file <文件>
 
 - 项目 UUID + 可导航链接格式：`[<项目名>](mention://project/<project-id>)`
 - 验证证据摘要（DevOps 回报的 whoami / hook 状态）
-- 后续提示（未完成层提醒）：仓库 harness 重建（harness-kit）、编排层（aicoding-orchestration-bootstrap）、角色层（aicoding-agent-bootstrap）
+- 后续提示（未完成层提醒）：编排层（aicoding-orchestration-bootstrap）、仓库 harness（aicoding-harness-bootstrap）
 
 ## 铁律
 

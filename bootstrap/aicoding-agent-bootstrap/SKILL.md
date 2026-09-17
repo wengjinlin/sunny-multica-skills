@@ -36,10 +36,12 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 
 ### 第 0 步：前置
 
+> 安装链顺序：aicoding-importing-skills → **本 skill** →（人工 env 注入，如 GITLAB_TOKEN）→ aicoding-project-init → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap。项目在本 skill 之后才创建，未建属正常。
+
 1. `multica runtime list --output json` 取 runtime-id（本工作区需已 setup daemon）
 2. `multica agent list --output json` 找到本工作区 Mika 的 UUID，记为 **NEW_MIKA_ID**
 3. `multica agent list` 记录现有 agent 名单（幂等基准）
-4. **项目前置校验**：`multica project list --output json` 确认项目已创建且已绑定仓库资源——agent 指令是项目无关的角色契约，项目上下文靠「项目描述注入 + 运行时读仓库文档」获得，项目未建则该链路断。未建/未绑 → 报告提醒「先跑 aicoding-project-init」，**不阻断**（铁律：不中断批处理）
+4. **项目状态探测（非阻断）**：`multica project list --output json` 看项目是否已建——未建属**正常**：安装链里项目由后续 aicoding-project-init 创建，且其验证环节要用本 skill 建出的 DevOps agent；报告只提示「下一步：跑 aicoding-project-init」，**不阻断**（铁律：不中断批处理）
 5. 列出本 skill `agents/` 目录全部 `*.md` —— 文件数 = 待创建数，逐个处理
 
 ### 第 1 步：逐文件创建

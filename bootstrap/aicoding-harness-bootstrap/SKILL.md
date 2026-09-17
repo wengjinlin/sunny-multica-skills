@@ -19,8 +19,9 @@ description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/�
 4. **数据库预检（仅收集连接信息，不执行导出——导出在第 1 步骨架铺完、第 2 步分析时才跑）**：
    - 判有库/无库：扫 pom 驱动依赖（oracle / postgresql / mysql / sqlserver JDBC 驱动）+ `application*.yml` / `*.properties` 的 datasource；判不了 → 问用户
    - 无库 → 报告注明「项目无数据库」，第 1 步铺完后删除 `docs/database/` 两文件并在 `docs/index.md` 去掉对应两行
-   - 有库 → 按 aicoding-db-schema-export 第 1 步优先级链收集非敏感参数（agent env → 已有生成声明 → **自动读 test 环境配置**），缺哪项问哪项；**密码必问**——用户 chat 提供后只用于单次命令 env（用完即弃），或用户改选「人工在能连库的机器跑脚本回传 `schema_dump.json`」
-   - 两项用户都不选 → 记入第 5 步人工待办，**不得产出空的 database 文档**
+   - 有库 → 按 aicoding-db-schema-export 第 1 步优先级链收集非敏感参数（agent env → 已有生成声明 → **自动读 test 环境配置**），缺哪项问哪项
+   - **密码分两路**：配置文件数据源里有密码字段 → 向用户确认一次「密码就用配置里那个？」，确认后第 2 步在生成声明登记**密码位置指针**（非敏感），首导直接读配置值（单次命令用完即弃），change 期 Developer **零 env**；配置里没有密码 → 用户 chat 提供一次（单次命令 env，用完即弃），并在第 5 步报告提醒注入 `DB_PASSWORD`（命令见报告）
+   - 连接信息或密码拿不到 → 用户可改选「人工在能连库的机器跑脚本回传 `schema_dump.json`」；仍不行 → 记入第 5 步人工待办，**不得产出空的 database 文档**
 
 ### 第 1 步：铺骨架
 
@@ -93,7 +94,7 @@ openspec/config.yaml
 ### 第 5 步：报告
 
 - 文件清单表：骨架文件 × 填充状态（全部消灭占位符才可 commit）
-- **数据库状态行（含库项目必列）**：已生成（域数/表数，随 harness 一次提交）/ 未生成（原因 + 补齐待办：提供连接重跑，或人工跑脚本回传 JSON）；并提醒「change 期 Developer 重生成依赖 `DB_*` env 注入（命令见 aicoding-agent-bootstrap 报告的人类待办）」
+- **数据库状态行（含库项目必列）**：已生成（域数/表数，随 harness 一次提交；密码在配置里的注明「密码位置已登记生成声明，change 期 Developer 零 env」）/ 未生成（原因 + 补齐待办：提供连接重跑，或人工跑脚本回传 JSON）；密码不在配置的加提醒「change 期 Developer 重生成需注入 `DB_PASSWORD`：`multica agent env set <Developer-UUID> --custom-env-file <文件>`（文件内容 `{"DB_PASSWORD": "<值>"}`）」
 - **人工待办**：MR 创建 + 首版人审——宪法首版必须人审，它约束后续所有 agent
 - 提示后续微调路径：文档演进走仓库 MR；结构变更回写本 skill 的 skeleton/
 
