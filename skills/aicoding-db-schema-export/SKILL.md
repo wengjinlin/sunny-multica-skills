@@ -24,10 +24,13 @@ description: 连活库导出表结构（表/列/索引/主键/外键/注释）�
 按优先级取值，非敏感参数随后回写 `docs/database/index.md` 生成声明（只写到 `db_type@schema` 级别，不写 host/凭据）：
 
 1. **agent 自定义 env**（值由人类注入）：`DB_TYPE` / `DB_HOST` / `DB_PORT` / `DB_USER` / `DB_SERVICE`（Oracle 服务名）/ `DB_SCHEMA`，密码固定 `DB_PASSWORD`
-2. **仓库 `docs/database/index.md` 生成声明**：已有 db_type/schema 则只补问 host/密码
-3. 都没有 → 问人类**一次**（数据库类型、host:port、user、schema/service、密码走 env）
+2. **仓库 `docs/database/index.md` 生成声明**：已有 db_type/schema 则只补缺项
+3. **仓库配置文件自动分析**：扫 `application*.yml` / `*.properties` 的 datasource（url/host/port/username/service/database）；多环境（dev/test/prod）**取 test 配置**；db_type 从 pom 驱动依赖判
+4. 以上仍缺 → **停下问人类一次**，只问缺的项（正常情况到第 3 层只剩密码）
 
-硬规则：**密码只从环境变量 `DB_PASSWORD` 读，永不写入脚本参数、命令行、issue 评论或任何文档**。
+密码只有三个来源，其余一律拒绝：① 环境变量 `DB_PASSWORD`（仅当密码不在项目配置里时，change 期 Developer env 注入）；② **生成声明登记的密码位置**——配置文件数据源里已有密码时，用户确认一次「就用配置里那个」，生成声明登记非敏感指针（如「密码位置：application-test.yml 数据源（人工确认）」），此后按指针读配置值视同用户确认；③ 用户当场提供——只放进单次命令的环境变量（如 `DB_PASSWORD='...' python temp/dump_schema.py ...`），命令结束即消失。**密码本体永不写入脚本参数、命令行参数、issue 评论或任何文档**——生成声明只记位置指针，不记密码本体。
+
+**禁止静默降级**：只有用户明确说「连不上/不给连接」时才走「无 DB 连接降级」；不允许跳过问人环节自行判「连不上」。
 
 ### 第 2 步：落盘脚本并执行
 
