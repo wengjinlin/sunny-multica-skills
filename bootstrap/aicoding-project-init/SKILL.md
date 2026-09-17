@@ -81,7 +81,7 @@ multica agent env set <DevOps-UUID> --custom-env-file <文件>
 
 - 项目 UUID + 可导航链接格式：`[<项目名>](mention://project/<project-id>)`
 - 验证证据摘要（DevOps 回报的 whoami / hook 状态）
-- 后续提示（未完成层提醒）：仓库 harness 重建（aicoding-harness-bootstrap）、编排层（aicoding-orchestration-bootstrap）、角色层（aicoding-agent-bootstrap）
+- 后续提示（未完成层提醒）：仓库 harness 重建（harness-kit）、编排层（aicoding-orchestration-bootstrap）、角色层（aicoding-agent-bootstrap）
 
 ## 铁律
 

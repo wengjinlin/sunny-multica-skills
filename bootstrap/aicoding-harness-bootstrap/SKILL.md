@@ -16,6 +16,11 @@ description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/�
 1. `multica repo checkout <REPO_URL>`（或确认仓库已在本工作区），`git fetch origin`
 2. 基于 `origin/master` 建 `feature/init-harness` 分支
 3. **幂等检查**：仓库已有 CLAUDE.md/AGENTS.md → 转**对齐模式**（逐文件对照骨架补缺节，不覆盖本地定制），报告差异后收工
+4. **数据库预检（仅收集连接信息，不执行导出——导出在第 1 步骨架铺完、第 2 步分析时才跑）**：
+   - 判有库/无库：扫 pom 驱动依赖（oracle / postgresql / mysql / sqlserver JDBC 驱动）+ `application*.yml` / `*.properties` 的 datasource；判不了 → 问用户
+   - 无库 → 报告注明「项目无数据库」，第 1 步铺完后删除 `docs/database/` 两文件并在 `docs/index.md` 去掉对应两行
+   - 有库 → 按 aicoding-db-schema-export 第 1 步优先级链收集非敏感参数（agent env → 已有生成声明 → **自动读 test 环境配置**），缺哪项问哪项；**密码必问**——用户 chat 提供后只用于单次命令 env（用完即弃），或用户改选「人工在能连库的机器跑脚本回传 `schema_dump.json`」
+   - 两项用户都不选 → 记入第 5 步人工待办，**不得产出空的 database 文档**
 
 ### 第 1 步：铺骨架
 
@@ -71,6 +76,8 @@ openspec/config.yaml
 **数据库文档生成**（填充 `docs/database/` 两文件时执行）：
 
 - 一律走工作区 **aicoding-db-schema-export** skill（连接信息收集 → 固定脚本导出 → 按 `tables/_template.md` 格式化，结果一致性由脚本保证）；**禁止**临时手写连接代码或 SQL 导出
+- **前置硬校验**：本会话必须能 Skill 调用 aicoding-db-schema-export（由 workspace agent 执行本 skill 时须先给它分配该 skill）——调不到 = **阻断**，报告贴补齐命令（`multica skill import ...` / `multica agent skills add ...`）后停，禁止跳过继续、禁止手写 SQL 顶替
+- 连接信息以第 0 步预检收集结果为准；到本步仍不就绪 → 停下二选一问用户：提供密码 / 人工在能连库机器跑 skill 第 2 步命令回传 `schema_dump.json`（从 skill 第 3 步继续）
 - 连不上库：按该 skill 的降级路径——人工在能连库的机器跑同一脚本、回传 `schema_dump.json`，仍是脚本导出
 - 域划分与 `product/index.md` 业务域对齐；无前缀归属的杂项表进 `_unmapped` 域
 
@@ -86,6 +93,7 @@ openspec/config.yaml
 ### 第 5 步：报告
 
 - 文件清单表：骨架文件 × 填充状态（全部消灭占位符才可 commit）
+- **数据库状态行（含库项目必列）**：已生成（域数/表数，随 harness 一次提交）/ 未生成（原因 + 补齐待办：提供连接重跑，或人工跑脚本回传 JSON）；并提醒「change 期 Developer 重生成依赖 `DB_*` env 注入（命令见 aicoding-agent-bootstrap 报告的人类待办）」
 - **人工待办**：MR 创建 + 首版人审——宪法首版必须人审，它约束后续所有 agent
 - 提示后续微调路径：文档演进走仓库 MR；结构变更回写本 skill 的 skeleton/
 

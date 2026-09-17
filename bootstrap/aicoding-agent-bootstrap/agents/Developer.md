@@ -99,4 +99,10 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 
 ## 自定义 env（仅 key 说明，值由人类注入）
 
-（无）
+- DB_TYPE # 数据库类型 oracle/postgresql/mysql/sqlserver（含库项目才需要，无库项目整组忽略；值取 test 环境配置或 docs/database/index.md 生成声明）
+- DB_HOST # 数据库主机（test 库）
+- DB_PORT # 端口
+- DB_USER # 数据库用户
+- DB_SERVICE # Oracle 服务名（仅 Oracle）
+- DB_SCHEMA # schema 或库名
+- DB_PASSWORD # 密码——仅经 multica agent env set 注入，重生成数据库文档 task 用
