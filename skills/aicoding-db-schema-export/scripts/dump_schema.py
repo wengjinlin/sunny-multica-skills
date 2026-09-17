@@ -100,9 +100,9 @@ POSTGRESQL_QUERIES = {
                (xpath('/row/cnt/text()', xml_count))[1]::text::int AS row_estimate
         FROM (
             SELECT table_schema, table_name,
-                   query_to_xml(format('SELECT COUNT(*) AS cnt FROM %I.%I', table_schema, table_name), false, true, '') AS xml_count
+                   query_to_xml(format('SELECT COUNT(*) AS cnt FROM %%I.%%I', table_schema, table_name), false, true, '') AS xml_count
             FROM information_schema.tables
-            WHERE table_schema = :schema
+            WHERE table_schema = %(schema)s
         ) t
         ORDER BY table_name
     """,
@@ -111,14 +111,14 @@ POSTGRESQL_QUERIES = {
                obj_description(c.oid) AS table_comment
         FROM pg_class c
         JOIN pg_namespace n ON c.relnamespace = n.oid
-        WHERE n.nspname = :schema AND obj_description(c.oid) IS NOT NULL
+        WHERE n.nspname = %(schema)s AND obj_description(c.oid) IS NOT NULL
     """,
     "columns": """
         SELECT table_schema AS schema_name, table_name, column_name, data_type,
                character_maximum_length, numeric_precision, numeric_scale,
                is_nullable, column_default, ordinal_position
         FROM information_schema.columns
-        WHERE table_schema = :schema
+        WHERE table_schema = %(schema)s
         ORDER BY table_name, ordinal_position
     """,
     "col_comments": """
@@ -128,7 +128,7 @@ POSTGRESQL_QUERIES = {
                    c.ordinal_position
                ) AS column_comment
         FROM information_schema.columns c
-        WHERE c.table_schema = :schema
+        WHERE c.table_schema = %(schema)s
           AND pg_catalog.col_description(
                   (quote_ident(c.table_schema) || '.' || quote_ident(c.table_name))::regclass::oid,
                   c.ordinal_position
@@ -138,7 +138,7 @@ POSTGRESQL_QUERIES = {
         SELECT schemaname AS schema_name, tablename AS table_name,
                indexname AS index_name, indexdef
         FROM pg_indexes
-        WHERE schemaname = :schema
+        WHERE schemaname = %(schema)s
         ORDER BY tablename, indexname
     """,
     "primary_keys": """
@@ -148,7 +148,7 @@ POSTGRESQL_QUERIES = {
         JOIN information_schema.key_column_usage kcu
             ON tc.constraint_name = kcu.constraint_name
             AND tc.table_schema = kcu.table_schema
-        WHERE tc.table_schema = :schema AND tc.constraint_type = 'PRIMARY KEY'
+        WHERE tc.table_schema = %(schema)s AND tc.constraint_type = 'PRIMARY KEY'
         ORDER BY tc.table_name, kcu.ordinal_position
     """,
     "foreign_keys": """
@@ -162,7 +162,7 @@ POSTGRESQL_QUERIES = {
         JOIN information_schema.constraint_column_usage ccu
             ON tc.constraint_name = ccu.constraint_name
             AND tc.table_schema = ccu.constraint_schema
-        WHERE tc.table_schema = :schema AND tc.constraint_type = 'FOREIGN KEY'
+        WHERE tc.table_schema = %(schema)s AND tc.constraint_type = 'FOREIGN KEY'
         ORDER BY tc.table_name, kcu.ordinal_position
     """,
 }
@@ -172,7 +172,7 @@ MYSQL_QUERIES = {
         SELECT table_schema AS schema_name, table_name, table_rows AS row_estimate,
                create_time, table_comment
         FROM information_schema.tables
-        WHERE table_schema = :db AND table_type = 'BASE TABLE'
+        WHERE table_schema = %(db)s AND table_type = 'BASE TABLE'
         ORDER BY table_name
     """,
     "columns": """
@@ -180,14 +180,14 @@ MYSQL_QUERIES = {
                character_maximum_length, numeric_precision, numeric_scale,
                is_nullable, column_default, ordinal_position, column_comment
         FROM information_schema.columns
-        WHERE table_schema = :db
+        WHERE table_schema = %(db)s
         ORDER BY table_name, ordinal_position
     """,
     "indexes": """
         SELECT table_schema AS schema_name, table_name, index_name,
                non_unique, seq_in_index, column_name, index_type
         FROM information_schema.statistics
-        WHERE table_schema = :db
+        WHERE table_schema = %(db)s
         ORDER BY table_name, index_name, seq_in_index
     """,
     "primary_keys": """
@@ -197,7 +197,7 @@ MYSQL_QUERIES = {
         JOIN information_schema.key_column_usage kcu
             ON tc.constraint_name = kcu.constraint_name
             AND tc.table_schema = kcu.table_schema
-        WHERE tc.table_schema = :db AND tc.constraint_type = 'PRIMARY KEY'
+        WHERE tc.table_schema = %(db)s AND tc.constraint_type = 'PRIMARY KEY'
         ORDER BY tc.table_name, kcu.ordinal_position
     """,
     "foreign_keys": """
@@ -210,7 +210,7 @@ MYSQL_QUERIES = {
         JOIN information_schema.referential_constraints rc
             ON kcu.constraint_name = rc.constraint_name
             AND kcu.table_schema = rc.constraint_schema
-        WHERE kcu.table_schema = :db
+        WHERE kcu.table_schema = %(db)s
           AND kcu.referenced_table_name IS NOT NULL
         ORDER BY kcu.table_name, kcu.ordinal_position
     """,
@@ -223,7 +223,7 @@ SQLSERVER_QUERIES = {
         FROM sys.tables t
         JOIN sys.schemas s ON t.schema_id = s.schema_id
         JOIN sys.partitions p ON t.object_id = p.object_id AND p.index_id IN (0, 1)
-        WHERE s.name = :schema
+        WHERE s.name = ?
         ORDER BY t.name
     """,
     "tab_comments": """
@@ -233,7 +233,7 @@ SQLSERVER_QUERIES = {
         JOIN sys.schemas s ON t.schema_id = s.schema_id
         LEFT JOIN sys.extended_properties ep
             ON t.object_id = ep.major_id AND ep.minor_id = 0 AND ep.name = 'MS_Description'
-        WHERE s.name = :schema AND ep.value IS NOT NULL
+        WHERE s.name = ? AND ep.value IS NOT NULL
     """,
     "columns": """
         SELECT s.name AS schema_name, t.name AS table_name, c.name AS column_name,
@@ -248,7 +248,7 @@ SQLSERVER_QUERIES = {
         LEFT JOIN sys.default_constraints dc ON c.default_object_id = dc.object_id
         LEFT JOIN sys.extended_properties ep
             ON c.object_id = ep.major_id AND c.column_id = ep.minor_id AND ep.name = 'MS_Description'
-        WHERE s.name = :schema
+        WHERE s.name = ?
         ORDER BY t.name, c.column_id
     """,
     "indexes": """
@@ -257,7 +257,7 @@ SQLSERVER_QUERIES = {
         FROM sys.indexes i
         JOIN sys.tables t ON i.object_id = t.object_id
         JOIN sys.schemas s ON t.schema_id = s.schema_id
-        WHERE s.name = :schema AND i.is_hypothetical = 0 AND i.name IS NOT NULL
+        WHERE s.name = ? AND i.is_hypothetical = 0 AND i.name IS NOT NULL
         ORDER BY t.name, i.name
     """,
     "index_columns": """
@@ -268,7 +268,7 @@ SQLSERVER_QUERIES = {
         JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
         JOIN sys.tables t ON i.object_id = t.object_id
         JOIN sys.schemas s ON t.schema_id = s.schema_id
-        WHERE s.name = :schema
+        WHERE s.name = ?
         ORDER BY t.name, i.name, ic.key_ordinal
     """,
     "primary_keys": """
@@ -279,7 +279,7 @@ SQLSERVER_QUERIES = {
         JOIN sys.columns c ON i.object_id = c.object_id AND c.column_id = c.column_id
         JOIN sys.tables t ON i.object_id = t.object_id
         JOIN sys.schemas s ON t.schema_id = s.schema_id
-        WHERE s.name = :schema AND i.is_primary_key = 1
+        WHERE s.name = ? AND i.is_primary_key = 1
         ORDER BY t.name, ic.key_ordinal
     """,
     "foreign_keys": """
@@ -294,7 +294,7 @@ SQLSERVER_QUERIES = {
         JOIN sys.tables t2 ON fkc.referenced_object_id = t2.object_id
         JOIN sys.schemas s2 ON t2.schema_id = s2.schema_id
         JOIN sys.columns c2 ON fkc.referenced_object_id = c2.object_id AND fkc.referenced_column_id = c2.column_id
-        WHERE s.name = :schema
+        WHERE s.name = ?
         ORDER BY t.name, fk.name
     """,
 }
@@ -368,8 +368,8 @@ def main():
     parser.add_argument("--output", required=True, help="Output JSON file path")
     args = parser.parse_args()
 
-    password = args.password or os.environ.get(args.password_env)
-    if not password:
+    args.password = args.password or os.environ.get(args.password_env)
+    if not args.password:
         print(f"ERROR: password not provided via --password or env {args.password_env}", file=sys.stderr)
         sys.exit(1)
 
@@ -381,7 +381,12 @@ def main():
         sys.exit(1)
 
     queries = QUERIES[args.db_type]
-    bind = {"schema": args.schema, "db": args.schema}
+    if args.db_type == "sqlserver":
+        bind = (args.schema,)      # pyodbc qmark 占位符：位置参数
+    elif args.db_type == "mysql":
+        bind = {"db": args.schema}  # mysql-connector pyformat
+    else:                           # oracle(:name) / postgresql(pyformat) 都吃命名 dict
+        bind = {"schema": args.schema}
 
     print(f"Connecting to {args.db_type}@{args.host}:{args.port or '?'} schema={args.schema}", file=sys.stderr)
     conn = connect(args.db_type, args)
@@ -395,6 +400,7 @@ def main():
             },
             "data": {},
         }
+        failures = 0
         with conn.cursor() as cur:
             for name, sql in queries.items():
                 print(f"  -> querying {name}...", file=sys.stderr)
@@ -403,6 +409,12 @@ def main():
                 except Exception as e:
                     print(f"  !! query {name} failed: {e}", file=sys.stderr)
                     result["data"][name] = []
+                    failures += 1
+        if failures:
+            print(f"WARNING: {failures}/{len(queries)} queries failed - dump is incomplete", file=sys.stderr)
+            if failures == len(queries):
+                print("ERROR: all queries failed, dump is empty - aborting", file=sys.stderr)
+                sys.exit(2)
 
         out = Path(args.output)
         out.parent.mkdir(parents=True, exist_ok=True)
