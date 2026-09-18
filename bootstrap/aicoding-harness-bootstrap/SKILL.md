@@ -6,7 +6,7 @@ description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/�
 # aicoding-harness-bootstrap：新仓库 harness 建设
 
 **范围声明**：
-- **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/index.md` / `docs/lessons/{index.md + 各角色 md}` / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
+- **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/{index.md + 7 篇 sunny 能力文档 + _template.md}` / `docs/lessons/{index.md + 各角色 md}` / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
 - **不建**：仓库侧 skills（全部在 Multica 侧维护，由 bootstrap skills 复现）、`.claude/commands/`（multica 架构下无用）
 
 ## 执行流程
@@ -41,7 +41,7 @@ docs/standards/api.md          # 接口规范 + 评审清单
 docs/standards/database.md     # 数据库规范 + 变更检查清单（无数据库的项目删除）
 docs/standards/testing.md      # 测试规范（新旧代码口径）
 docs/templates/design-review-template.md  # 前端设计人审模板（非 sunny 系前端按第 2 步指引重写）
-docs/help/index.md
+docs/help/                     # 能力清单 + 7 篇 sunny 能力文档（po/s3/lock/sendoa/import/export/kafka）+ _template.md；非 sunny 体系项目按第 2 步指引重写
 docs/lessons/index.md          # 机制 + 角色索引（条目只写角色文件，索引不维护条目）
 docs/lessons/_template.md      # 角色文件模板 → 填充时按角色清单复制为 {Role}.md
 hooks/guard_write.py           → 落位到目标仓库 .claude/hooks/guard_write.py
