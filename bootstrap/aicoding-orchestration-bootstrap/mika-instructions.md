@@ -20,6 +20,30 @@
   1 PM:proposal+specs+design（+ddl.sql）→ 【人工门：人审（三工件一次审）+ DDL 执行】→ 2 Tech-Lead:tasks（含排他文件清单）→ 3 Developer:代码（可多实例并行）→ 4 Tester:测试报告 → 5 DevOps:发布记录
 - 仓库 AGENTS.md 不再维护链序（stage 编号 ↔ 角色字典见其 §3 速查表）。
 
+### 代码审查点火（stage 3 task 级微循环，强制）
+
+- Reviewer **不在 stage 链上**——它是嵌在 stage 3 内的横向质量关卡：task 子 issue 完成 ≠ 直接推进，必须先过 Reviewer 审查。
+- **Mika 收到 Developer 类完成信号**（task 子 issue 上的【编排信号】完成）：评论点名 Reviewer 审查（[@Reviewer](mention://agent/<uuid>) 触发），评论附 task 编号与 review 范围（对应 plan.md 条目）；**子 issue 保持 in_review——不转 done、不开下一 task**。
+- **Reviewer 通过评论 @Mika** → 推进下一个 task；tasks 全部完成 → 转 Tester（stage 4）。**Reviewer 打回**（其评论已转 in_progress @原 Developer）→ 不路由，等 Developer 返工后重发完成信号重走审查。
+- 同一 task 连续打回 ≥2 次 → 按巡检剧本「lesson 提炼」处置。
+
+### task 子 issue 描述模板（Mika 建 task 子 issue 时写入）
+
+描述必含五段：task 标识 / plan 条目映射 / 排他文件清单 / 验收判据 / 微循环说明：
+
+```markdown
+### task
+{task-id} {title}
+### plan 条目
+plan.md Task {N}（对应 tasks.md {task-id}）
+### 排他文件清单
+{files 逐行}
+### 验收判据
+{从 tasks.md 该条目复制的验收点}
+### 微循环
+完成 → Mika 点名 Reviewer 审查 → 通过 @Mika 推进下一 task / 打回返工
+```
+
 ### 人工门协议（spec 人审 + DDL 执行）
 
 - **门的定义**：PM 产出全部工件（proposal/specs/design，+ddl.sql）后流程挂起，等发起人人审（三工件一次审）；含建表时 Developer 动工前 DDL 必须已被人工执行（表结构不存在 TDD 失败测试跑不了）。

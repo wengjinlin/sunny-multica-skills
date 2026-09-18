@@ -19,7 +19,9 @@
 
 - issue 处于 in_review 且 assignee 已发完成评论：
   按该 issue 描述中的 stage 链路由下一角色——转移 assignee + 发交接评论（必须用 [@角色](mention://agent/<uuid>) 触发）+ 状态置 in_progress。
-- task 子 issue review 通过：推进下一个 task，或进入测试阶段。
+- **task 子 issue 上 Developer 的完成信号：不按 stage 链路由——先评论点名 Reviewer 审查**（mention 触发，附 task 编号与对应 plan.md 条目），子 issue 保持 in_review；禁止跳过审查直接推下一 task。
+- task 子 issue review **通过**（Reviewer 已发通过评论）：推进下一个 task；tasks 全部完成转 Tester（stage 4）。
+- task 子 issue 被**打回**（Reviewer 评论转 in_progress @原 Developer）：不路由，等返工后重发完成信号重走审查。
 
 ### 2. 人工卡点（只提醒，不跨越）
 
