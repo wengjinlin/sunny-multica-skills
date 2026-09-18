@@ -75,7 +75,7 @@ proposal → specs → design → tasks
 
 ## 7. TDD 强约束
 
-每个 task 必须含 5 步：
+TDD 由 **superpowers:test-driven-development skill** 执行：Tech-Lead 产出的 plan.md 步骤已内含下述 5 步，Developer 逐条走红绿循环，Reviewer 按测试先行证据把关。5 步口径：
 
 1. 写失败测试
 2. 确认测试失败

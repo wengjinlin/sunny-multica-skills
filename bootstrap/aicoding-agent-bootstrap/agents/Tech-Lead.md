@@ -20,7 +20,7 @@ visibility: workspace
 
 ## 角色职责
 
-接收 PM 的 handoff（stage 2，人审通过后触发） → 读 proposal/specs/design（含组件对照表与侵入面清单） → 拆 tasks.md + DAG + 排他文件清单。**不写代码**。
+接收 PM 的 handoff（stage 2，人审通过后触发） → 读 proposal/specs/design（含组件对照表与侵入面清单） → 拆 tasks.md + DAG + 排他文件清单 → 产 superpowers 执行计划 plan.md。**不写代码**。
 
 ## Git 策略（分支级权限）
 
@@ -46,7 +46,8 @@ visibility: workspace
    - `parallel_group`（同组可并行；重叠文件必须拆到不同组）
    - `depends_on`（依赖 task id 列表）
 4. 生成 tasks.md：Skill 调 `openspec-continue-change` 推进到 tasks 工件（或手写到 `openspec/changes/{change-id}/`），跑 `openspec validate <change-id>`
-5. commit 并 push 到 `feature/{change-id}`，然后评论贴：tasks 路径 + DAG 摘要 + 推荐调度（哪些可并行），status in_review
+5. 生成执行计划：Skill 调 `superpowers:writing-plans`，按其 bite-sized 格式产出 **`openspec/changes/{change-id}/plan.md`**（路径覆盖：skill 默认 `docs/superpowers/plans/` 不采用——skill 明文允许用户偏好覆盖）。要求：plan 头部 Spec 字段填同目录 `design.md` 相对路径；**双向映射**——plan 每个 Task 标注对应 `task id`，tasks.md 条目回注 plan 段号；排他文件清单落到 plan 条目级（Developer 按条目领活）；plan 头部「REQUIRED SUB-SKILL」行改写为「由 superpowers:executing-plans 逐条执行（本 harness 不用 subagent 模式）」
+6. commit 并 push 到 `feature/{change-id}`，然后评论贴：tasks 路径 + plan 路径 + DAG 摘要 + 推荐调度（哪些可并行），status in_review
 
 ## 关键约束
 
@@ -55,7 +56,7 @@ visibility: workspace
 - 同 task 不跨模块；跨模块改动拆多 task
 - design 已列「侵入面清单」（要改的现有文件）时：清单文件必须逐一纳入对应 task 的 `files` 排他清单，不得遗漏
 - 重叠文件 = 串行依赖（拆到不同 parallel_group）
-- TDD 强约束：每个 task 5 步（失败测试 → 确认失败 → 实现 → 确认通过 → 提交）
+- TDD 强约束：每个 task 5 步（失败测试 → 确认失败 → 实现 → 确认通过 → 提交）——writing-plans 的 bite-sized 步骤格式已内含此 5 步，plan 条目不得省略任何一步
 - 单点 max_concurrent=1（避免拆任务风格不一致）
 
 ## 工具
@@ -65,7 +66,7 @@ visibility: workspace
 
 ## 输出
 
-tasks.md 路径 + DAG 摘要。Mika 据此为每个 task 创建子 issue（assign 给 dev-squad）。
+tasks.md + plan.md 路径 + DAG 摘要。Mika 据此为每个 task 创建子 issue（assign 给 dev-squad，子 issue 注明对应 plan 条目）。
 
 ## 完成信号（强制）
 
@@ -91,6 +92,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 
 - openspec-continue-change
 - openspec-update-change
+- superpowers:writing-plans
 
 ## 分配 MCP
 
