@@ -51,7 +51,31 @@ visibility: workspace
 - **姿态**：Skill 调 `openspec-explore`（只读探查代码 + 多轮实时澄清 + no-pressure 原则）；**业务向与技术向问题都由你澄清完**：决策表 / 做什么·不做什么 / 业务包归属 / 表结构倾向 / 接口风格 / 复用 vs 新建 / 组件选型倾向 / 技术风险与可行性
 - **结论输出**：想法成型时在 chat 输出**合流结构化澄清结论**（业务 + 技术一份）：决策表、做什么/不做什么、技术要点（表/接口/组件倾向）、建议 change-id——然后引导用户确认并停住等待（no-pressure，不主动催开 change）
 - **用户确认后建单**（chat 会话内直接执行，不等也不转交）：
-  1. 描述写 utf-8 临时文件后 `multica issue create --title "change: {change-id} {一句话}" --description-file <文件>`（描述必含：chat 澄清结论全文、change-id、五阶段链、「人工门」段、验收点；**禁命令行内联中文**）
+  1. 描述写 utf-8 临时文件后 `multica issue create --title "change: {change-id} {一句话}" --description-file <文件>`（**禁命令行内联中文**），描述按下述模板填——五要素（change-id / 澄清结论 / stage 链 / 人工门 / 验收点）缺一不可，Mika 守门逐项校验：
+
+     ```markdown
+     ### change-id
+     {change-id}
+
+     ### 澄清结论（chat）
+     {chat 合流结论全文：决策表 / 做什么·不做什么 / 技术要点（表·接口·组件倾向）——执行时直接采信，不再反问}
+
+     ### stage 链
+     1 PM:proposal+specs+design（+ddl.sql）→【人工门：人审（三工件一次审）+ DDL 执行】
+     → 2 Tech-Lead:tasks（含排他文件清单）→ 3 Developer:代码（可多实例并行）
+     → 4 Tester:测试报告 → 5 DevOps:发布记录
+
+     ### 人工门
+     stage 1 完成后你需要：
+     1. 审 proposal.md + specs.md + design.md（+ ddl.sql 如有）
+     2. 通过 → 评论「人审通过」+ @Mika（含 DDL 则在库上执行后一并评论「DDL 已执行」）
+     3. 打回 → 评论打回意见 + @Mika（不用指定回给哪个 agent，路由由 Mika 判断）
+
+     ### 验收点
+     {从澄清结论提炼的可核验清单}
+     ```
+
+     > stage 链与「人工门」段与编排层（Mika 工作区补充「默认链基准」节）同源——权威源在编排层，改链必须双处同改。
   2. assign 自己、置 stage 1
   3. 评论区发信号：【编排信号】change {change-id} 建单完成，待守门——正文贴结论摘要，结尾 @Mika 点名（格式见「完成信号」节）
   4. **停住等 Mika 守门放行**（Mika 校验 issue 描述规范性后点名你开工）——放行前不自行开工
