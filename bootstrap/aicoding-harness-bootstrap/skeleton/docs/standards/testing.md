@@ -27,6 +27,22 @@
 
 <!-- 分析指引：何时需要集成测试、工具（@SpringBootTest/Testcontainers 等）、测试库策略；项目无集成测试基础设施时如实声明替代手段（EXPLAIN PLAN + 联调环境）并标注为技术债 -->
 
+## 浏览器 QA（页面/流程类验收点）
+
+> 与 Multica 侧 `aicoding-browser-qa` skill 同源（权威源在 skill）——本段是零依赖兜底口径，改双处同改。执行细节（browse 命令、报告模板）以 skill 为准。
+
+**三档深度**：Quick（critical+high，冒烟）/ Standard（+medium，change 级验收，缺省）/ Exhaustive（+low，发布前）。
+
+**severity 四级**：critical（阻断核心流程/数据丢失/崩溃）→ high（主要功能不可用无绕行）→ medium（可用有明显问题有绕行）→ low（外观小疵）。
+
+**问题七类**：Visual/UI、Functional、UX、Content、Performance、Console/Errors、Accessibility。
+
+**每页 8 步清单**：① 视觉扫描 ② 逐交互点击 ③ 表单（空提交/非法值/边界）④ 导航（进出/回退）⑤ 状态（空/加载/错误/溢出）⑥ Console 新增错误 ⑦ 响应式（按验收点）⑧ 账号边界（只用测试账号，不切角色账号）。
+
+**报告要求**：健康评分（基线 100，critical -25 / high -10 / medium -4 / low -1）+ 分级问题表（每条带截图证据与复现步骤）+ ship-readiness 结论；浏览器基座不可用时按本清单手测并显式声明「降级」。
+
+<!-- 分析指引：纯后端/无页面的项目删除本节；sunny 系前端保留并在表单专项处补 SunnyForm/EditGrid 检查点 -->
+
 ## 禁止的反模式
 
 - {{TESTING_ANTIPATTERN}}

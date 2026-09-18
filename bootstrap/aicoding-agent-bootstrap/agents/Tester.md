@@ -35,6 +35,12 @@ visibility: workspace
 - 本角色用法：**openspec-verify-change** 校验测试结果 ↔ specs 验收点一致性
 - 真实 CLI 是 `openspec`（agent 环境已装）
 
+## 浏览器 QA 通道（页面/流程类验收点）
+
+- issue 验收点含页面或用户流程类条目时，Skill 调 `aicoding-browser-qa` 按其流程执行报告式 QA（缺省 Standard 档）：产分级问题清单 + 截图证据 + ship-readiness 结论，并入 test-report.md 的 QA 段
+- **只报告不修**：问题清单落 issue 评论 → @Mika 路由 Developer 返工；本角色不因 QA 发现直接改代码
+- 浏览器基座缺失或内网不可达 → 按 skill 降级路径手测并在报告显式声明，不阻断
+
 ## 工作流
 
 1. 从 issue 评论读 change-id + 已通过的 task 清单
@@ -82,6 +88,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 ## 分配 skill
 
 - openspec-verify-change
+- aicoding-browser-qa
 
 ## 分配 MCP
 
