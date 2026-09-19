@@ -30,7 +30,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 | `## 指令` | instructions 全文；`{{MIKA_ID}}` 为占位符 | 写临时文件后传 `--instructions`（禁命令行内联中文） |
 | `## 分配 skill` | 每行一个 skill 名，或「（无）」 | `multica agent skills add`（按名字解析 id） |
 | `## 分配 MCP` | 一个 JSON 对象（mcpServers 结构），或「（无）」 | 写临时文件后 `--mcp-config-file` |
-| `## 自定义 env` | 每行一个 `KEY # 用途说明`，或「（无）」 | **人类待办**——agent 无权执行 `multica agent env set` |
+| `## 自定义 env` | 每行一个 `KEY # 用途说明`，或「（无）」 | **key+占位值自动登记**：按 key 行注释生成 `{"KEY": "__待填:<用途简述>__"}` 跑 `multica agent env set`（人看 agent env 列表即知要填什么）；**真值注入是人工待办**——占位值运行期无害，agent 侧解析链遇 `__待填` 前缀自动跳过 |
 
 ## 执行流程
 
@@ -67,7 +67,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
    - 存在的：`multica agent skills add <新agent-id> --skill-ids <存在的id列表>`
    - **缺失的 skill：不阻断、不重试、不中止后续文件处理**——仅记入缺失登记（agent 名 + skill 名），留待总体报告
 5. **分配 MCP**：节内非「（无）」时：JSON 写临时文件，创建时加 `--mcp-config-file <file>`（若 agent 已建则 `multica agent update <id> --mcp-config-file <file>`）；若配置为引用式（引用 workspace 级 MCP 名）且解析不到，**同样只记缺失登记，agent 保留已创建状态**
-6. **env**：节内非「（无）」时：记入人类待办清单，不代替执行
+6. **env**：节内非「（无）」时：**自动登记 key + 占位值**——逐 key 按行注释生成 `{"<KEY>": "__待填:<用途简述>__"}` 写临时文件，`multica agent env set <新agent-id> --custom-env-file <file>`；真值注入记入人类待办清单。env set 执行失败不阻断，记入缺失登记
 
 ### 第 2 步：总体报告（全部文件处理完后统一输出，缺失内容只在这里收口）
 
@@ -85,7 +85,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 统计：N/M 个 agent 创建（或已存在）；K 项分配缺失（skill X 项 / mcp Y 项）
 ```
 
-**人类待办**（env 注入，逐条给出可复制命令）：
+**人类待办**（env 真值注入——key+占位值已自动登记，此处把占位值覆盖为真值，逐条给出可复制命令）：
 ```
 multica agent env set <新agent的UUID> --custom-env-file <文件>
 # 文件内容：{"<KEY>": "<值>"}   # 值从安全渠道获取，不入库不入评论

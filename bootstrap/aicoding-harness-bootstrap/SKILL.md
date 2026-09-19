@@ -58,6 +58,7 @@ openspec/config.yaml
 |---|---|
 | 项目定位/模块表 | 根目录扫描 + 各模块 `pom.xml` / `package.json` |
 | 技术栈/端口 | 依赖清单 + 配置文件端口（**只读**，不抄凭据） |
+| 构建命令与工具路径 | §4 抄 pom/package.json scripts 的命令语义（机器无关）；§5 写自解析协议（PATH → agent env 候选验证 → 常见位置 glob 探测 → 人工待办），**禁写本机路径快照**；填完在当前 runtime 按链完整实测 |
 | 分层规则/命名前缀 | 抽样 controller/service/mapper/entity 归纳（每类 ≥3 例） |
 | 平台包优先级 | 二方包依赖清单（如 `com.sunny:*`），能力→包映射表 |
 | 保护目录 | 配置/DB 脚本实际路径，与 hook 默认清单对齐 |

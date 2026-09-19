@@ -111,4 +111,6 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 
 ## 自定义 env（仅 key 说明，值由人类注入）
 
-（无）
+- MVN_BIN  # 本机 mvn 可执行文件绝对路径（Windows 形如 /c/.../mvn.cmd），构建命令解析链②用；在 PATH 可用时可不填
+- JAVA_HOME  # 本机 JDK 根目录（如 /d/jdk1.8.0_171），mvn 运行前置；解析链②用
+- NODE_BIN  # 本机 node 可执行文件绝对路径（前端构建用）；纯后端项目本行删除
