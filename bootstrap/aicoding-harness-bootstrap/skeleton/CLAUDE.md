@@ -151,5 +151,5 @@ TDD 由 **superpowers:test-driven-development skill** 执行：Tech-Lead 产出�
 ## 15. 文档体系入口
 
 - `docs/index.md` 是 docs/ 唯一导航入口（各角色必读顺序 + 文档维护规则）；本宪法只保留红线，详单都在 docs/ 下
-- 常用定位：业务域/术语 → `docs/product/index.md`；模块↔表前缀 → `docs/architecture/index.md` §1；表结构 → `docs/database/index.md`；测试口径 → `docs/standards/testing.md`
+- 常用定位：业务域/术语 → `docs/product/index.md`；模块↔表前缀 → `docs/architecture/index.md` §1；表结构 → `docs/database/index.md`；测试口径 → `docs/standards/testing.md`；人工测试验证报告 → `docs/human-test-reports/`（人类维护，agent 只读）
 - 文档随 change 同步更新（Tech-Lead 安排 task），不允许「事后补文档」

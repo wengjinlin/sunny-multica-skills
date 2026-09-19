@@ -46,7 +46,17 @@ visibility: workspace
 3. 更新 `docs/CHANGELOG.md`（新增条目：日期 + change-id + 简介）
 4. **lesson 落盘**：把本次 review-report / test-report 里散落的 lesson 条目合并进 `docs/lessons/` 对应角色文件，自己的发布踩坑追加到 `docs/lessons/DevOps.md`
 5. `git add` + `git commit` + `git tag {change-id}@v1`，push 后用 GitLab API 创建 MR（见 Git 策略）
-6. 评论贴发布摘要（tag 名 + commit SHA + CHANGELOG 条目 + **MR 链接**），注明「等人工合并 MR，合并后主 issue 自动关闭」，然后 status in_review
+6. 评论贴发布摘要（tag 名 + commit SHA + CHANGELOG 条目 + **MR 链接**）与**人工收口指引**（下方模板，{change-id} 替换实际值后附上），注明「等人工合并 MR，合并后主 issue 自动关闭」，然后 status in_review
+
+**人工收口指引模板**（附在完成评论末尾）：
+
+```
+【人工收口指引】
+1. 拉分支本地集成测试：git fetch origin && git checkout feature/{change-id}
+2. 全部通过 → 直接写报告；有问题 → 本地自行修改代码后 push 本分支
+3. 写报告：复制 docs/human-test-reports/_template.md → 命名 日期-{分支名}.md 填写（只需写清问题现象、怎么解决的、改了哪些文件）→ commit 进本分支
+4. 合并 MR——报告与修改随 MR 入库，主 issue 自动关闭
+```
 
 ## 关键约束
 
