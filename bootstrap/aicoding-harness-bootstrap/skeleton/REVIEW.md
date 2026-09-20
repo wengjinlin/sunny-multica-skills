@@ -84,7 +84,7 @@
 
 {{DATA_GATE_ITEMS}}
 
-<!-- 分析指引：DB 方言、DELETE/UPDATE 必须 WHERE、SELECT * 禁用、索引走查等按实际数据库填写；无 DB 的项目可删本关。diff 级 SQL 安全四问必查：UPDATE/DELETE 是否必带 WHERE、有无字符串拼接 SQL、新查询是否可能索引失效、事务边界是否把远程调用圈进来 -->
+<!-- 分析指引：DB 方言、DELETE/UPDATE 必须 WHERE、SELECT * 禁用、索引走查等按实际数据库填写；含 DDL 变更时必查：ddl.sql 为平铺 SQL 语句（无 PL/SQL 匿名块 / EXECUTE IMMEDIATE / DBMS_OUTPUT / 存在性预检查包装，触发器后不加 `/`）；无 DB 的项目可删本关。diff 级 SQL 安全四问必查：UPDATE/DELETE 是否必带 WHERE、有无字符串拼接 SQL、新查询是否可能索引失效、事务边界是否把远程调用圈进来 -->
 
 ### 关 5：security（安全审查）
 

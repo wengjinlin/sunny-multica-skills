@@ -37,4 +37,4 @@
 
 {{DB_MIGRATION_RULES}}
 
-<!-- 分析指引：DDL 审核与人工执行流程——对接本 harness 人工门：PM 产 `openspec/changes/{change-id}/ddl.sql` → 人审通过 → **人工在库上执行** → 评论回执 @Mika → 重生成 ../database/ 受影响域文档；另含脚本命名与回滚要求；本节与 AGENTS.md §6 变更联动表同源 -->
+<!-- 分析指引：DDL 审核与人工执行流程——对接本 harness 人工门：PM 产 `openspec/changes/{change-id}/ddl.sql` → 人审通过 → **人工在库上执行** → 评论回执 @Mika → 重生成 ../database/ 受影响域文档；另含脚本命名与回滚要求；**执行形式约束（必写）**：ddl.sql 一律平铺 SQL 语句逐条分号结尾（触发器后不加 `/`），禁止 PL/SQL 匿名块（DECLARE…BEGIN…END）/ EXECUTE IMMEDIATE / DBMS_OUTPUT / 存在性预检查——执行通道常为跳板机受限 SQL 入口，只认平铺语句；业务 SQL（Mapper 内）不受此限，方言照常；本节与 AGENTS.md §6 变更联动表同源 -->

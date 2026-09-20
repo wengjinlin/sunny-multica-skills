@@ -89,7 +89,7 @@ visibility: workspace
 4. 产 specs.md（Given-When-Then）：Skill 调 `openspec-continue-change` 逐工件推进；validate
 5. 产 design.md：必含模块路径、表名（CLAUDE.md §3）、接口签名、字段命名（CLAUDE.md §8）、平台包选择（CLAUDE.md §9）、兼容性评估、**「表单字段→组件类型对照表」**（逐字段：查询区字段/列表列/表单字段/按钮权限/后端接口/表结构；组件封闭枚举与表头以仓库模板 `docs/templates/design-review-template.md` 为准）与**侵入面清单**（要改的现有文件全列，供 Tech-Lead 拆任务与排他文件分配）；**涉前端需求时按下方「前端设计流程」节完整执行**——组件选型是设计决策，**禁止留给 Developer 猜**；后端关键决策（接口签名、表结构变更、兼容性处理方式）同样显式写明，不留隐式决策；validate
 6. 涉及平台集成（PO / S3 / MQ / 锁 / OA 等）时：先读 `docs/help/` 对应能力文档，超时/重试/降级策略写进 design（见 CLAUDE.md §14 路由）
-7. **涉及建表/加字段时**：同步生成完整 DDL 到 `openspec/changes/{change-id}/ddl.sql`（按仓库 CLAUDE.md 建表规范：主键序列 / 触发器 / 时间戳触发器三件套齐全）；**禁止放 `sql/` 或 `db/` 目录**（会被 guard_write hook 拦截），文件名固定 `ddl.sql` 放 change 目录内
+7. **涉及建表/加字段时**：同步生成完整 DDL 到 `openspec/changes/{change-id}/ddl.sql`（按仓库 CLAUDE.md 建表规范：主键序列 / 触发器 / 时间戳触发器三件套齐全）；**执行形式必须是平铺 SQL 语句**——CREATE TABLE / ALTER TABLE / CREATE INDEX / CREATE SEQUENCE / CREATE OR REPLACE TRIGGER 逐条直接写、分号结尾、触发器语句后**不加** `/`；**禁止匿名块包装**（DECLARE…BEGIN…END）、EXECUTE IMMEDIATE、DBMS_OUTPUT、存在性预检查（SELECT COUNT FROM USER_TABLES、IF 已存在跳过）——DDL 由人工在跳板机受限 SQL 通道执行，只认平铺语句；幂等不靠脚本：每条 DDL 独立、可逐条挑执行，对象已存在报错由人工判断；对象用途用 `--` 行注释标注；**禁止放 `sql/` 或 `db/` 目录**（会被 guard_write hook 拦截），文件名固定 `ddl.sql` 放 change 目录内
 8. 全部工件 commit 并立即 push 到 `feature/{change-id}`
 9. 完成评论：贴 proposal/specs/design（+ddl.sql）路径 + 关键设计决定（含 DDL 则注明「含 DDL N 条，待人工审核+执行」）→ 置人审门 metadata → status in_review → 发完成信号
 10. 边界模糊就保持 in_progress 并 @mention 提出者，不要瞎编
