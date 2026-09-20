@@ -5,12 +5,13 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 
 # aicoding-orchestration-bootstrap：复现编排层
 
-编排层只有两个组件，本 skill 各配置一个：
+编排层有三个组件，本 skill 各配置一个：
 
 | 组件 | 内容权威源 | 落点 |
 |---|---|---|
 | 巡检兜底 autopilot | `autopilot.md`（30 分钟 cron，run_only，assignee=Mika） | autopilot 的 description |
 | Mika 编排接力入口 | `mika-instructions.md`（`{{AUTOPILOT_ID}}` 占位符） | Mika 自定义 instructions 的「工作区补充」节 |
+| 结构文档对账 autopilot | `doc-audit-autopilot.md`（周级 cron，run_only，assignee=DocKeeper） | autopilot 的 description（assignee 的 DocKeeper agent 由 aicoding-agent-bootstrap 创建） |
 
 主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Tech-Lead/…）由 aicoding-agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 aicoding-agent-bootstrap。
 
@@ -43,7 +44,18 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 4. 合并结果写临时文件后回写：`multica agent update <Mika-ID> --instructions "$(cat instr.tmp)"`
    ——只动 instructions 字段，其余字段（model/visibility/env 等）一律不碰
 
-### 第 3 步：报告
+### 第 3 步：创建/更新结构文档对账 autopilot
+
+1. `doc-audit-autopilot.md` 全文写 utf-8 临时文件
+2. **幂等**：同名 autopilot 已存在 → 只更新剧本；不存在 → 创建：
+   ```
+   multica autopilot create --title "结构文档对账" --description "$(cat dap.tmp)" \
+     --agent DocKeeper --mode run_only --output json
+   ```
+   （DocKeeper agent 须已由 aicoding-agent-bootstrap 创建并分配 aicoding-harness-audit skill；缺失则记入报告待办，不阻断）
+3. 触发器：先查后加——`multica autopilot trigger-add <ID> --kind schedule --cron "17 8 * * 1" --timezone Asia/Shanghai`（周一早间，避开整点）
+
+### 第 4 步：报告
 
 - autopilot：新 UUID（或「已存在 → 已同步剧本」）/ cron 表达式 / mode=run_only / assignee=Mika
 - Mika：instructions 长度前后对比 / 「工作区补充：编排接力」节已写入（含真实 AUTOPILOT_ID）
@@ -51,6 +63,6 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 
 ## 维护约定
 
-- `autopilot.md` / `mika-instructions.md` 是两个权威源的**离线副本**：在网页/CLI 手工改过服务端后，必须回写对应文件，否则下次复现漂移
+- `autopilot.md` / `mika-instructions.md` / `doc-audit-autopilot.md` 是三个权威源的**离线副本**：在网页/CLI 手工改过服务端后，必须回写对应文件，否则下次复现漂移
 - 剧本保持分节结构（定位与总原则 / 运行流程 / 分类处置规则 / 幂等硬约束）——人类要能直接阅读
 - 敏感值（token/密钥）永不写入模板

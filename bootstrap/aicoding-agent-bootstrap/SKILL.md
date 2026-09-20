@@ -36,7 +36,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 
 ### 第 0 步：前置
 
-> 安装链顺序：aicoding-importing-skills（含 **superpowers 系列导入**，GitHub 源 obra/superpowers——Tech-Lead/Developer 的 plan/TDD 能力依赖，须先于本 skill 导入；**aicoding-browser-qa** 也在此步导入——Tester 的浏览器 QA 通道依赖）→ **本 skill** →（人工 env 注入，如 GITLAB_TOKEN）→ aicoding-project-init → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap。项目在本 skill 之后才创建，未建属正常。
+> 安装链顺序：aicoding-importing-skills（含 **superpowers 系列导入**，GitHub 源 obra/superpowers——Tech-Lead/Developer 的 plan/TDD 能力依赖，须先于本 skill 导入；**aicoding-browser-qa**（Tester）与 **aicoding-harness-audit**（DocKeeper）也在此步导入）→ **本 skill** →（人工 env 注入，如 GITLAB_TOKEN）→ aicoding-project-init → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap。项目在本 skill 之后才创建，未建属正常。
 
 1. `multica runtime list --output json` 取 runtime-id（本工作区需已 setup daemon）
 2. `multica agent list --output json` 找到本工作区 Mika 的 UUID，记为 **NEW_MIKA_ID**

@@ -34,3 +34,12 @@
 2. **数据库表结构变更**（建表/加字段）→ DDL 人工执行后，按 `database/index.md` 的「再生成规则」重生成受影响域文档
 3. **踩坑沉淀分流**：可复用的平台用法进 `help/`；一次性踩坑进 `lessons/` 角色文件；「大家都知道但代码看不出来」的约定进 `architecture/implicit-contracts.md`；**人工测试发现的问题**按 `human-test-reports/` 机制经复盘提炼进 `lessons/`
 4. 本索引只在**目录级变化**（新增/删除文档文件）时更新，不维护条目内容
+5. **结构文档对账兜底**：变更随行（规则 1）仍是主防线；DocKeeper agent（周级 autopilot 触发）按 `aicoding-harness-audit` skill 对基线以来的增量做对账，可自动项走 MR，DDL 与存疑项提醒人工——人不需要主动维护本节之外的对账动作
+
+## 结构文档同步状态（DocKeeper 维护，人不填）
+
+| 上次对账基线 commit | 日期 | 方式 |
+|---|---|---|
+| （由 DocKeeper 首次对账时登记基线 = 当时 origin/master HEAD；此后每次对账在同一 MR 中前移） | | |
+
+<!-- 分析指引：本节随骨架铺入即保留空表；值全部由 DocKeeper agent 读写（aicoding-harness-audit skill），人类与其它 agent 不维护此表 -->

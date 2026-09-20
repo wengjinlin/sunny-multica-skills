@@ -109,5 +109,5 @@ openspec/config.yaml
 
 ## 维护约定
 
-- `skeleton/` 是**结构**权威源：harness 章节布局变更须回写；项目内容演进不回写（那是各仓库自己的 MR）
+- `skeleton/` 是**结构**权威源：harness 章节布局变更须回写；项目内容演进不回写（那是各仓库自己的 MR，漂移由 aicoding-harness-audit skill + DocKeeper 周级对账兜底）
 - 与其他 bootstrap 的边界：角色/编排/Multica 项目配置分别归 aicoding-agent-bootstrap / aicoding-orchestration-bootstrap / aicoding-project-init，本 skill 只管仓库内文件
