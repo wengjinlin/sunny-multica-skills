@@ -58,6 +58,7 @@ metadata:
 | 禁用 | `lucide:power-off` |
 | 导入 | `lucide:folder-up` |
 | 导出 | `lucide:folder-down` |
+| 删除 | `lucide:trash-2` |
 
 菜单/页面行图标仍按语义匹配（见上节），两规则并存勿混用。
 
