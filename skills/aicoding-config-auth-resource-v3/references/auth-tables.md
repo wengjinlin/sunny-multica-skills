@@ -1,7 +1,7 @@
 # 权限资源表结构沉淀（四表模型）
 
 > 字段语义以平台 jar 反编译 SQL（sunny-auth-client 0.0.21 `LoginMapperOracle.xml`；sunny-base-module 0.0.54 `AuthResourceServiceImpl`/`AuthResButtonMapperOracle.xml`）与前端源码（`sunny-ecq-web/src/router/routes/utils.ts`、`access.ts`、`guard.ts`、querylist 页面 `toolbarButtonClick`）消费链为准，`docs/db/auth.md` 字典佐证；个别取值以现库实际行为准（见各表「执行前核对」）。
-> dev 库：172.26.58.135:1521/orcl——agent 永不直连，仅 fmchen 人工执行。
+> dev 库地址以环境配置为准——agent 永不直连，仅发起人人工执行。
 
 ## 表一：AUTH_RES_MENU 资源菜单表（菜单树）
 
