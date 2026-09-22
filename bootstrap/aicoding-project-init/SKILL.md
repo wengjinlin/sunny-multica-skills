@@ -16,6 +16,27 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 
 > 安装链顺序：aicoding-importing-skills → aicoding-agent-bootstrap →（人工 env 注入，如 GITLAB_TOKEN）→ **本 skill** → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap
 
+## 中文传参铁律
+
+`--description` / `--title` 等参数**没有** `--xxx-file` 变体；`$(cat file)` 把中文内联进命令行时，PowerShell / cmd / GBK 代码页会把 UTF-8 内容转成乱码入库。**凡含中文的参数值一律经 multica_call.py 传 `@文件`**，禁止 `$(cat)` 内联、禁止命令行直写中文。
+
+执行前先把以下助手脚本写入工作目录 `multica_call.py`：
+
+```python
+# 用法：python multica_call.py <子命令...> --description @<utf-8 文件路径>
+import subprocess, sys
+args = []
+for a in sys.argv[1:]:
+    args.append(open(a[1:], 'rb').read().decode('utf-8') if a.startswith('@') else a)
+r = subprocess.run(['multica'] + args, capture_output=True, text=True, encoding='utf-8')
+print(r.returncode)
+print((r.stdout or '')[:2000])
+if r.returncode:
+    print((r.stderr or '')[-800:])
+```
+
+以 `@` 开头的参数值被替换为该 utf-8 文件全文；UUID / URL / 数字等纯 ASCII 参数直接传。临时文件用完即删。
+
 ## 执行流程
 
 ### 第 0 步：前置检查（幂等探测）
@@ -48,7 +69,7 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 
 用户回复完成后，**在当前 chat 会话内直接执行**以下验证（不建 issue、不转派 DevOps——issue 子任务完成后不会自动回到本流程，会断链）：
 
-1. `multica repo add <REPO_URL> --description "<项目名>仓库"`（幂等，已存在不重复；失败多为 A 步 GitLab 连接未生效或 URL 有误）
+1. `multica repo add <REPO_URL> --description @repodesc.tmp`（说明文字「<项目名>仓库」写 utf-8 临时文件；幂等，已存在不重复；失败多为 A 步 GitLab 连接未生效或 URL 有误）
 2. `multica repo checkout <REPO_URL>` 拉取仓库——成功 = A（workspace GitLab 连接）+ 仓库可达验证通过
 
 **结果判定**：
@@ -65,14 +86,14 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 ### 第 3 步：注册仓库 + 创建项目 + 绑定资源
 
 1. **注册到 workspace 仓库表**（agent 的 Repositories 可用域；幂等，已有不重复）：
-   `multica repo add <REPO_URL> --description "<项目名>仓库"`
-2. `project.md` 模板替换 `{{PROJECT_NAME}}` / `{{REPO_URL}}`，写 utf-8 临时文件（description，禁命令行内联中文）
+   `multica repo add <REPO_URL> --description @repodesc.tmp`（说明文字写 utf-8 临时文件）
+2. `project.md` 模板替换 `{{PROJECT_NAME}}` / `{{REPO_URL}}` 写 `proj.tmp`；项目名写 `title.tmp`（均 utf-8，见「中文传参铁律」）
 3. 创建（github_repo 资源随 `--repo` 自动绑定）：
    ```
-   multica project create --title <项目名> --repo <REPO_URL> \
-     --description "$(cat proj.tmp)" --status in_progress --output json
+   python multica_call.py project create --title @title.tmp --repo <REPO_URL> \
+     --description @proj.tmp --status in_progress --output json
    ```
-   记录 project-id。对齐模式则跳过 create，只做 `multica project update <id> --description "$(cat proj.tmp)"`
+   记录 project-id。对齐模式则跳过 create，只做 `python multica_call.py project update <id> --description @proj.tmp`
 4. 确认两处落点：`multica repo list`（应含 REPO_URL）+ `multica project resource list <project-id> --output json`（应见 github_repo → REPO_URL）
 
 ### 第 4 步：报告

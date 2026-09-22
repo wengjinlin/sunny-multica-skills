@@ -15,6 +15,27 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 
 主通道 = 角色 agent 完成评论发【编排信号】@Mika 秒级唤醒；cron autopilot 只是兜底。角色 agent 层（PM/Tech-Lead/…）由 aicoding-agent-bootstrap skill 负责，两个 skill 互补、互不越界：编排逻辑改动只动本 skill，角色交接协议改动只动 aicoding-agent-bootstrap。
 
+## 中文传参铁律
+
+`--description` / `--title` / `--instructions` 等参数**没有** `--xxx-file` 变体；`$(cat file)` 把中文内联进命令行时，PowerShell / cmd / GBK 代码页会把 UTF-8 内容转成乱码入库。**凡含中文的参数值一律经 multica_call.py 传 `@文件`**，禁止 `$(cat)` 内联、禁止命令行直写中文。
+
+执行前先把以下助手脚本写入工作目录 `multica_call.py`：
+
+```python
+# 用法：python multica_call.py <子命令...> --description @<utf-8 文件路径>
+import subprocess, sys
+args = []
+for a in sys.argv[1:]:
+    args.append(open(a[1:], 'rb').read().decode('utf-8') if a.startswith('@') else a)
+r = subprocess.run(['multica'] + args, capture_output=True, text=True, encoding='utf-8')
+print(r.returncode)
+print((r.stdout or '')[:2000])
+if r.returncode:
+    print((r.stderr or '')[-800:])
+```
+
+以 `@` 开头的参数值被替换为该 utf-8 文件全文；UUID / cron 表达式 / mode 等纯 ASCII 参数直接传。临时文件用完即删。
+
 ## 执行流程
 
 ### 第 0 步：前置
@@ -25,10 +46,10 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 
 ### 第 1 步：创建/更新巡检 autopilot
 
-1. `autopilot.md` 全文写 utf-8 临时文件（如 `./ap.tmp`；禁命令行内联中文）
-2. **幂等**：同名 autopilot 已存在 → 取其 ID，只更新剧本：`multica autopilot update <id> --description "$(cat ap.tmp)"`，**不碰**触发器/assignee/mode/status；不存在 → 创建：
+1. `autopilot.md` 全文写 `./ap.tmp`，标题「编排兜底巡检」写 `./title.tmp`（均 utf-8，见「中文传参铁律」）
+2. **幂等**：同名 autopilot 已存在 → 取其 ID，只更新剧本：`python multica_call.py autopilot update <id> --description @ap.tmp`，**不碰**触发器/assignee/mode/status；不存在 → 创建：
    ```
-   multica autopilot create --title "编排兜底巡检" --description "$(cat ap.tmp)" \
+   python multica_call.py autopilot create --title @title.tmp --description @ap.tmp \
      --agent Mika --mode run_only --output json
    ```
    记录新 **AUTOPILOT_ID**
@@ -41,15 +62,15 @@ description: 在新工作区复现编排层（巡检兜底 autopilot + Mika 编�
 1. `multica agent get <Mika-ID> --output json` 读当前**自定义 instructions 字段**（注意：不是 system_instructions——那是平台管理的角色契约，不可覆盖）
 2. `mika-instructions.md` 中 `{{AUTOPILOT_ID}}` 全部替换为 AUTOPILOT_ID
 3. **幂等合并**：现有 instructions 已含「## 工作区补充：编排接力」节 → 该节整节替换、其余内容原样保留；没有 → 末尾追加
-4. 合并结果写临时文件后回写：`multica agent update <Mika-ID> --instructions "$(cat instr.tmp)"`
+4. 合并结果写 utf-8 临时文件后回写：`python multica_call.py agent update <Mika-ID> --instructions @instr.tmp`
    ——只动 instructions 字段，其余字段（model/visibility/env 等）一律不碰
 
 ### 第 3 步：创建/更新结构文档对账 autopilot
 
-1. `doc-audit-autopilot.md` 全文写 utf-8 临时文件
-2. **幂等**：同名 autopilot 已存在 → 只更新剧本；不存在 → 创建：
+1. `doc-audit-autopilot.md` 全文写 `./dap.tmp`，标题「结构文档对账」写 `./title2.tmp`（均 utf-8）
+2. **幂等**：同名 autopilot 已存在 → 只更新剧本（`python multica_call.py autopilot update <id> --description @dap.tmp`）；不存在 → 创建：
    ```
-   multica autopilot create --title "结构文档对账" --description "$(cat dap.tmp)" \
+   python multica_call.py autopilot create --title @title2.tmp --description @dap.tmp \
      --agent DocKeeper --mode run_only --output json
    ```
    （DocKeeper agent 须已由 aicoding-agent-bootstrap 创建并分配 aicoding-harness-audit skill；缺失则记入报告待办，不阻断）

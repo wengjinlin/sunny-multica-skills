@@ -27,10 +27,31 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 
 | 节 | 内容 | 应用方式 |
 |---|---|---|
-| `## 指令` | instructions 全文；`{{MIKA_ID}}` 为占位符 | 写临时文件后传 `--instructions`（禁命令行内联中文） |
+| `## 指令` | instructions 全文；`{{MIKA_ID}}` 为占位符 | 写 utf-8 临时文件，经 multica_call.py 传 `--instructions @instr.tmp`（见「中文传参铁律」） |
 | `## 分配 skill` | 每行一个 skill 名，或「（无）」 | `multica agent skills add`（按名字解析 id） |
 | `## 分配 MCP` | 一个 JSON 对象（mcpServers 结构），或「（无）」 | 写临时文件后 `--mcp-config-file` |
 | `## 自定义 env` | 每行一个 `KEY # 用途说明`，或「（无）」 | **纯人工配置，agent 不执行任何 env 写操作**（实测 agent 凭据调 CLI env get/set 一律被拒，连自己的 env 也不行——env 是人工通道）：把「变量名 + 用途」整理成人类可读待配置清单进总体报告人类待办，由人工在 Multica 网页 agent 设置（或人工本机 CLI）配置；agent 运行时从自身进程环境变量读取 |
+
+## 中文传参铁律
+
+`--instructions` / `--description` 等参数**没有** `--xxx-file` 变体；`$(cat file)` 把中文内联进命令行时，PowerShell / cmd / GBK 代码页会把 UTF-8 内容转成乱码入库（实测事故：一次安装中 agent instructions 整段乱码）。**凡含中文的参数值一律经 multica_call.py 传 `@文件`**，禁止 `$(cat)` 内联、禁止命令行直写中文。
+
+执行前先把以下助手脚本写入工作目录 `multica_call.py`：
+
+```python
+# 用法：python multica_call.py <子命令...> --instructions @<utf-8 文件路径>
+import subprocess, sys
+args = []
+for a in sys.argv[1:]:
+    args.append(open(a[1:], 'rb').read().decode('utf-8') if a.startswith('@') else a)
+r = subprocess.run(['multica'] + args, capture_output=True, text=True, encoding='utf-8')
+print(r.returncode)
+print((r.stdout or '')[:2000])
+if r.returncode:
+    print((r.stderr or '')[-800:])
+```
+
+以 `@` 开头的参数值被替换为该 utf-8 文件全文；UUID / URL / 数字等纯 ASCII 参数直接传。临时文件用完即删。
 
 ## 执行流程
 
@@ -49,19 +70,19 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 对每个配置文件：
 
 1. **幂等检查**：同名 agent 已存在 → **不创建，改走同步模式（只做三个动作）**：
-   - **更新指令**：「## 指令」节（`{{MIKA_ID}}` 替换后）写临时文件，`multica agent update <id> --instructions "$(cat instr.tmp)"`——配置文件指令整体覆盖
+   - **更新指令**：「## 指令」节（`{{MIKA_ID}}` 替换后）写 utf-8 临时文件，`python multica_call.py agent update <id> --instructions @instr.tmp`——配置文件指令整体覆盖
    - **对齐分配 skill**：`multica agent skills set <id> --skill-ids <按配置文件解析到的全部id>`（set = 替换式对齐，配置文件是权威源）；配置为「（无）」则**不动现有挂载**（避免误清手工配置）；缺失 skill 照旧只登记不阻断
    - **对齐分配 MCP**：「## 分配 MCP」非「（无）」时 `multica agent update <id> --mcp-config-file <file>`；「（无）」则不动
    - **其余字段一律不碰**：description / model / thinking_level / service_tier / max_concurrent_tasks / visibility / env 保持现状——已存在的 agent 视为本地已有定制，同步仅限上述三项
 2. **准备指令**：取「## 指令」节全文，`{{MIKA_ID}}` 全部替换为 NEW_MIKA_ID，写 utf-8 临时文件（如 `./instr.tmp`）
 3. **创建**：
    ```
-   multica agent create --name <name> --description <description> \
+   python multica_call.py agent create --name <name> --description @desc.tmp \
      [--model <model>] [--thinking-level <t>] [--service-tier <tier>] \
      --max-concurrent-tasks <n> --visibility workspace \
-     --runtime-id <runtime-id> --instructions "$(cat instr.tmp)"
+     --runtime-id <runtime-id> --instructions @instr.tmp
    ```
-   记录新 UUID。frontmatter 空字段直接省略参数。
+   记录新 UUID。frontmatter 空字段直接省略参数；description 中文时写 `@desc.tmp`，纯 ASCII 可直传该值。
 4. **分配 skill**：节内非「（无）」时：
    - `multica skill list --output json` 按 name 解析出各 skill 的 id
    - 存在的：`multica agent skills add <新agent-id> --skill-ids <存在的id列表>`
