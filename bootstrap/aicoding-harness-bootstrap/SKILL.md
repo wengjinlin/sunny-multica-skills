@@ -49,7 +49,7 @@ docs/templates/design-review-template.md  # 前端设计人审模板（非 sunny
 docs/help/                     # 能力清单 + 7 篇 sunny 能力文档（po/s3/lock/sendoa/import/export/kafka）+ _template.md；非 sunny 体系项目按第 2 步指引重写
 docs/lessons/index.md          # 机制 + 角色索引（条目只写角色文件，索引不维护条目）
 docs/lessons/_template.md      # 角色文件模板 → 填充时按角色清单复制为 {Role}.md
-docs/human-test-reports/index.md    # 人工测试验证报告机制 + 记录索引（人类维护，agent 只读；归因在复盘做）
+docs/human-test-reports/index.md    # 人工测试验证报告机制 + 记录索引 + 复盘覆盖游标（人类维护，agent 只读；复盘由 aicoding-human-test-retro skill 执行）
 docs/human-test-reports/_template.md  # 报告模板 → 测试者复制为 日期-分支名.md（只写现象+处理+文件，不归因）
 hooks/guard_write.py           → 落位到目标仓库 .claude/hooks/guard_write.py
 openspec/config.yaml
