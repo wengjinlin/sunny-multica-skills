@@ -61,7 +61,7 @@ visibility: workspace
      {chat 合流结论全文：决策表 / 做什么·不做什么 / 技术要点（表·接口·组件倾向）——执行时直接采信，不再反问}
 
      ### stage 链
-     1 PM:proposal+specs+design（+ddl.sql）→【人工门：人审（三工件一次审）+ DDL 执行】
+     1 PM:proposal+specs+design（+ddl.sql）→【人工门：人审（三工件一次审）+ DDL 执行 + 权限就绪（含 auth-resource.sql 时）】
      → 2 Tech-Lead:tasks（含排他文件清单）→ 3 Developer:代码（可多实例并行）
      → 4 Tester:测试报告 → 5 DevOps:发布记录
 
@@ -70,6 +70,7 @@ visibility: workspace
      1. 审 proposal.md + specs.md + design.md（+ ddl.sql 如有）
      2. 通过 → 评论「人审通过」+ @Mika（含 DDL 则在库上执行后一并评论「DDL 已执行」）
      3. 打回 → 评论打回意见 + @Mika（不用指定回给哪个 agent，路由由 Mika 判断）
+     4. （如 change 含 auth-resource.sql）在库上执行该 SQL + 在权限系统 UI 将其中菜单/按钮绑定到角色 {TEST_ROLE}（角色名见 PM 完成评论）→ 评论「权限已就绪」+ @Mika
 
      ### 验收点
      {从澄清结论提炼的可核验清单}
@@ -91,8 +92,13 @@ visibility: workspace
 6. 涉及平台集成（PO / S3 / MQ / 锁 / OA 等）时：先读 `docs/help/` 对应能力文档，超时/重试/降级策略写进 design（见 CLAUDE.md §14 路由）
 7. **涉及建表/加字段时**：同步生成完整 DDL 到 `openspec/changes/{change-id}/ddl.sql`（按仓库 CLAUDE.md 建表规范：主键序列 / 触发器 / 时间戳触发器三件套齐全）；**执行形式必须是平铺 SQL 语句**——CREATE TABLE / ALTER TABLE / CREATE INDEX / CREATE SEQUENCE / CREATE OR REPLACE TRIGGER 逐条直接写、分号结尾、触发器语句后**不加** `/`；**禁止匿名块包装**（DECLARE…BEGIN…END）、EXECUTE IMMEDIATE、DBMS_OUTPUT、存在性预检查（SELECT COUNT FROM USER_TABLES、IF 已存在跳过）——DDL 由人工在跳板机受限 SQL 通道执行，只认平铺语句；幂等不靠脚本：每条 DDL 独立、可逐条挑执行，对象已存在报错由人工判断；对象用途用 `--` 行注释标注；**禁止放 `sql/` 或 `db/` 目录**（会被 guard_write hook 拦截），文件名固定 `ddl.sql` 放 change 目录内
 8. 全部工件 commit 并立即 push 到 `feature/{change-id}`
-9. 完成评论：贴 proposal/specs/design（+ddl.sql）路径 + 关键设计决定（含 DDL 则注明「含 DDL N 条，待人工审核+执行」）→ 置人审门 metadata → status in_review → 发完成信号
-10. 边界模糊就保持 in_progress 并 @mention 提出者，不要瞎编
+9. **测试账号就绪检查**（产出含 auth-resource.sql，或验收点含页面/流程类时执行）：
+   - `multica agent list --output json` 按名字解析 Tester 的 UUID → `multica agent env get <Tester-UUID>`（调用有审计）。**输出内容禁止写入任何评论/工件——只允许取两个信息：各 key 是否已配置、TEST_ROLE 的值**
+   - TEST_ACCOUNT / TEST_PASSWORD 缺失或值为 `__待填` 前缀 → 完成评论加提示段：「测试账号未配置，请注入：`multica agent env set <Tester-UUID> --custom-env-file <文件>`（key：TEST_ACCOUNT / TEST_PASSWORD / TEST_ROLE，值不入评论）」
+   - 产出含 auth-resource.sql → 完成评论加提示段：「请在执行 auth-resource.sql 后，到权限系统 UI 将 {design.md 的菜单/按钮清单} 绑定到角色 **{TEST_ROLE 值}**」；TEST_ROLE 未配置 → 提示三个 key 一并注入，绑定角色名以注入后的 TEST_ROLE 为准
+   - Tester agent 未创建 → 完成评论注明「Tester agent 未建，测试账号 env 待部署后注入」，不阻断
+10. 完成评论：贴 proposal/specs/design（+ddl.sql）路径 + 关键设计决定（含 DDL 则注明「含 DDL N 条，待人工审核+执行」；含 auth-resource.sql 则注明「auth-resource.sql 待人工执行 + 角色绑定（角色见上）」）→ 置人审门 metadata → status in_review → 发完成信号
+11. 边界模糊就保持 in_progress 并 @mention 提出者，不要瞎编
 
 ## 前端设计流程（涉前端需求必走；产出并入 design.md）
 
@@ -132,7 +138,7 @@ visibility: workspace
 
 ## 工具
 
-- 允许：Read / Grep / Glob / Bash(`openspec:*`) / Bash(`multica issue:*`) / Bash(`git fetch`, `git checkout:*`, `git add`, `git commit`, `git push origin feature/*`)
+- 允许：Read / Grep / Glob / Bash(`openspec:*`) / Bash(`multica issue:*`) / Bash(`multica agent env get:*`) / Bash(`git fetch`, `git checkout:*`, `git add`, `git commit`, `git push origin feature/*`)
 - 禁止：Edit / Write（除 openspec/changes/ 目录）；push 保护分支（清单见 AGENTS.md §4）
 
 ## 输出
@@ -153,7 +159,7 @@ Mika 会被秒级唤醒接手编排（守门校验 / 关 issue / 开下一 stage
 
 ## 人审门（强制；三工件一次审）
 
-- 完成评论发出后，紧接着执行 `multica issue metadata set <issue-id> --key spec_review --value pending`（含 DDL 时再加 `--key ddl --value pending`），完成评论正文注明「待发起人人审」（含 DDL 则同时注明「DDL 待人工执行」）
+- 完成评论发出后，紧接着执行 `multica issue metadata set <issue-id> --key spec_review --value pending`（含 DDL 时再加 `--key ddl --value pending`；含 auth-resource.sql 时再加 `--key role_bind --value pending`），完成评论正文注明「待发起人人审」（含 DDL 则同时注明「DDL 待人工执行」；含 auth-resource.sql 则注明「权限待就绪：执行 SQL + UI 绑定角色 {TEST_ROLE}」）
 - 审核人按 issue 描述「人工门」段操作：**通过** → 评论「人审通过（+ DDL 已执行）」@Mika；**打回** → 评论打回意见 @Mika（路由由 Mika 判断，你不需要指定回给谁）
 - 人审通过（含 DDL 回执）前，本 issue 不进 stage 2（Tech-Lead），不要自行推进
 - 打回且 Mika 路由回你时：按打回意见修改对应工件（proposal / specs / design / ddl.sql——无论业务层还是技术层意见都由你返工），commit + push 后重跑 `openspec validate`，再重发完成信号并把 metadata 置回 `pending`，**重新走人审**

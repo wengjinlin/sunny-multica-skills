@@ -118,15 +118,14 @@ WHEN NOT MATCHED THEN
 - code 取值：新增 = `add`（前端代码实证）；修改/启用/禁用/导入/导出无本地实证——观测现库同类按钮行对齐，无参照列封闭式问题问发起人，不猜。
 - **`C_ICON` 按固定映射填（硬规范，不语义匹配）**：
 
-| 操作 | code（待实证项除外） | 图标                       |
-|---|---|--------------------------|
-| 新增 | `add` | `lucide:copy-plus`       |
+| 操作 | code（待实证项除外） | 图标 |
+|---|---|---|
+| 新增 | `add` | `lucide:copy-plus` |
 | 修改 | 待确认 | `lucide:pencil-sparkles` |
-| 启用 | 待确认 | `lucide:power`           |
-| 禁用 | 待确认 | `lucide:power-off`       |
-| 导入 | 待确认 | `lucide:folder-up`       |
-| 导出 | 待确认 | `lucide:folder-down`     |
-| 删除 | 待确认 | `lucide:trash-2`         |
+| 启用 | 待确认 | `lucide:power` |
+| 禁用 | 待确认 | `lucide:power-off` |
+| 导入 | 待确认 | `lucide:folder-up` |
+| 导出 | 待确认 | `lucide:folder-down` |
 
 - 未实证列（C_VALID/C_CLASS/C_TEMPLATETYPE）留空；现有『新增』行有非空惯例值则对齐补齐。文件注释头写明 C_AREA 拼写核对项。
 

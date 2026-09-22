@@ -27,6 +27,7 @@
 
 - spec 人审门：issue metadata `spec_review=pending` 挂起且距完成评论已超一个巡检周期 → 评论提醒发起人审核，附 issue 描述「人工门」段操作指引（通过/打回均评论 + @Mika）。
 - DDL 待人工执行（`ddl=pending`）、MR 待合并等：只在 issue 评论提醒用户，不代替执行。
+- 权限就绪门（`role_bind=pending`，仅含 auth-resource.sql 的 change）：超一个巡检周期未回执「权限已就绪」→ 评论提醒发起人在库上执行该 SQL 并到权限系统 UI 将菜单/按钮绑定到测试角色（角色名见 PM 完成评论）。**只提醒，不阻塞任何 stage 推进**（stage 4 点火不依赖此回执，未绑定时 Tester 的菜单可见性自检会作为环境阻塞上报）。
 - MR 合并后的主 issue 关闭由 GitLab close intent 原生机制完成（MR 描述含 Closes {issue-key}），巡检不做合并检测。
 
 ### 3. 子 issue 收尾

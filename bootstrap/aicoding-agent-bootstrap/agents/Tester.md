@@ -37,7 +37,7 @@ visibility: workspace
 
 ## 浏览器 QA 通道（页面/流程类验收点）
 
-- issue 验收点含页面或用户流程类条目时，Skill 调 `aicoding-browser-qa` 按其流程执行报告式 QA（缺省 Standard 档）：产分级问题清单 + 截图证据 + ship-readiness 结论，并入 test-report.md 的 QA 段
+- issue 验收点含页面或用户流程类条目时，Skill 调 `aicoding-browser-qa` 按其流程执行报告式 QA（缺省 Standard 档）：产分级问题清单 + 截图证据 + ship-readiness 结论，并入 test-report.md 的 QA 段；登录凭据从自身 env（TEST_ACCOUNT/TEST_PASSWORD）取，URL 按 skill §1 口径取（本机服务自解析端口，远程地址查仓库 CLAUDE.md §3 / issue 验收点）
 - **只报告不修**：问题清单落 issue 评论 → @Mika 路由 Developer 返工；本角色不因 QA 发现直接改代码
 - 浏览器基座缺失或内网不可达 → 按 skill 降级路径手测并在报告显式声明，不阻断
 
@@ -99,3 +99,6 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - MVN_BIN  # 本机 mvn 可执行文件绝对路径（Windows 形如 /c/.../mvn.cmd），测试命令解析链②用；在 PATH 可用时可不填
 - JAVA_HOME  # 本机 JDK 根目录（如 /d/jdk1.8.0_171），mvn 运行前置；解析链②用
 - NODE_BIN  # 本机 node 可执行文件绝对路径（前端构建/测试用）；纯后端项目本行删除
+- TEST_ACCOUNT  # 测试账号名（浏览器 QA 登录用）；缺失或 `__待填` 前缀 → 按 browser-qa 降级路径处理并提示注入
+- TEST_PASSWORD  # 测试账号密码（敏感：仅 env 流转，禁入 issue/评论/test-report）
+- TEST_ROLE  # 测试账号挂靠的角色名——权限系统 UI 绑定菜单/按钮的目标角色（非敏感，可入评论）；须与账号实际角色一致，否则菜单不可见
