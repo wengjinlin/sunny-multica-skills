@@ -97,7 +97,7 @@ openspec/config.yaml
 ### 第 5 步：报告
 
 - 文件清单表：骨架文件 × 填充状态（全部消灭占位符才可 commit）
-- **数据库状态行（含库项目必列）**：已生成（域数/表数，随 harness 一次提交；密码在配置里的注明「密码位置已登记生成声明，change 期 Developer 零 env」）/ 未生成（原因 + 补齐待办：提供连接重跑，或人工跑脚本回传 JSON）；密码不在配置的加提醒「change 期 Developer 重生成需注入 `DB_PASSWORD`：`multica agent env set <Developer-UUID> --custom-env-file <文件>`（文件内容 `{"DB_PASSWORD": "<值>"}`）」
+- **数据库状态行（含库项目必列）**：已生成（域数/表数，随 harness 一次提交；密码在配置里的注明「密码位置已登记生成声明，change 期 Developer 零 env」）/ 未生成（原因 + 补齐待办：提供连接重跑，或人工跑脚本回传 JSON）；密码不在配置的加提醒「change 期 Developer 重生成需配置环境变量 DB_PASSWORD（数据库密码）——入口：Multica 网页 → Developer agent 详情 → 环境变量；值不入评论」（人话格式，无命令）
 - **人工待办**：MR 创建 + 首版人审——宪法首版必须人审，它约束后续所有 agent
 - 提示后续微调路径：文档演进走仓库 MR；结构变更回写本 skill 的 skeleton/
 

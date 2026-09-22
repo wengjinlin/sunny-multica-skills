@@ -30,7 +30,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 | `## 指令` | instructions 全文；`{{MIKA_ID}}` 为占位符 | 写临时文件后传 `--instructions`（禁命令行内联中文） |
 | `## 分配 skill` | 每行一个 skill 名，或「（无）」 | `multica agent skills add`（按名字解析 id） |
 | `## 分配 MCP` | 一个 JSON 对象（mcpServers 结构），或「（无）」 | 写临时文件后 `--mcp-config-file` |
-| `## 自定义 env` | 每行一个 `KEY # 用途说明`，或「（无）」 | **key+占位值自动登记**：按 key 行注释生成 `{"KEY": "__待填:<用途简述>__"}` 跑 `multica agent env set`（人看 agent env 列表即知要填什么）；**真值注入是人工待办**——占位值运行期无害，agent 侧解析链遇 `__待填` 前缀自动跳过 |
+| `## 自定义 env` | 每行一个 `KEY # 用途说明`，或「（无）」 | **纯人工配置，agent 不执行任何 env 写操作**（实测 agent 凭据调 CLI env get/set 一律被拒，连自己的 env 也不行——env 是人工通道）：把「变量名 + 用途」整理成人类可读待配置清单进总体报告人类待办，由人工在 Multica 网页 agent 设置（或人工本机 CLI）配置；agent 运行时从自身进程环境变量读取 |
 
 ## 执行流程
 
@@ -67,7 +67,7 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
    - 存在的：`multica agent skills add <新agent-id> --skill-ids <存在的id列表>`
    - **缺失的 skill：不阻断、不重试、不中止后续文件处理**——仅记入缺失登记（agent 名 + skill 名），留待总体报告
 5. **分配 MCP**：节内非「（无）」时：JSON 写临时文件，创建时加 `--mcp-config-file <file>`（若 agent 已建则 `multica agent update <id> --mcp-config-file <file>`）；若配置为引用式（引用 workspace 级 MCP 名）且解析不到，**同样只记缺失登记，agent 保留已创建状态**
-6. **env**：节内非「（无）」时：**自动登记 key + 占位值**——逐 key 按行注释生成 `{"<KEY>": "__待填:<用途简述>__"}` 写临时文件，`multica agent env set <新agent-id> --custom-env-file <file>`；真值注入记入人类待办清单。env set 执行失败不阻断，记入缺失登记
+6. **env**：节内非「（无）」时：**不执行任何 env 读写操作**（agent 无权——实测 CLI env get/set 均返回无权限，env 是人工通道）——逐 key 整理成人类可读清单（变量名 + 用途说明），列入第 2 步总体报告的人类待办，由人工自行配置
 
 ### 第 2 步：总体报告（全部文件处理完后统一输出，缺失内容只在这里收口）
 
@@ -85,10 +85,11 @@ description: 在新工作区批量复现角色 agent 的创建与配置。TRIGGE
 统计：N/M 个 agent 创建（或已存在）；K 项分配缺失（skill X 项 / mcp Y 项）
 ```
 
-**人类待办**（env 真值注入——key+占位值已自动登记，此处把占位值覆盖为真值，逐条给出可复制命令）：
+**人类待办**（env 配置——只能人工完成；输出用人话格式，**不给命令**，变量名与说明可直接复制）：
 ```
-multica agent env set <新agent的UUID> --custom-env-file <文件>
-# 文件内容：{"<KEY>": "<值>"}   # 值从安全渠道获取，不入库不入评论
+以下 agent 需要配置环境变量（入口：Multica 网页 → 该 agent 详情 → 环境变量；本机 CLI 亦可）：
+- {agent 名}：{KEY}（{用途说明}）
+配置提示：值从安全渠道获取，不要贴进 issue/评论/文档；agent 只在自己的运行进程中读取这些变量。
 ```
 
 **铁律**：任何分配缺失**永远不回滚、不跳过 agent 创建、不中断批处理**——agent 先建出来，缺的挂载留给总体报告和补齐命令。`{{MIKA_ID}}` 替换抽查提醒同上。

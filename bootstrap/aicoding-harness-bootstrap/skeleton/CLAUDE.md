@@ -50,7 +50,7 @@
 
 {{BUILD_TOOL_PATH}}
 
-<!-- 分析指引：写「自解析协议」而非本机路径快照（快照在 agent 换 runtime 后过期误导）。标准四步链：① 试 PATH（mvn -v / node -v 直接跑）② 读 agent env 约定 key（MVN_BIN / JAVA_HOME / NODE_BIN），值只当候选——以 __待填 开头或 -v 验证失败即降级 ③ 探测常见安装位置（glob 模式清单跨机器通用可进 git，如 /c/Program Files/JetBrains/*/plugins/maven/lib/maven3/bin/mvn.cmd、/c/Program Files/Java/jdk*、/d/jdk*、~/.nvm/versions/*）④ 全失败停下评论人工待办，禁止瞎猜路径。每级命中先 -v 验证再正式使用。填完后在当前 runtime 按链完整走一遍实测（报告注明），保证文档写法可直接复制执行；全工具均在 PATH 的项目可简化为一句「全部工具在 PATH，直接使用」 -->
+<!-- 分析指引：写「自解析协议」而非本机路径快照（快照在 agent 换 runtime 后过期误导）。标准四步链：① 试 PATH（mvn -v / node -v 直接跑）② 读自身进程环境变量约定 key（MVN_BIN / JAVA_HOME / NODE_BIN；agent 无权用 CLI 查 env），值只当候选——-v 验证失败即降级 ③ 探测常见安装位置（glob 模式清单跨机器通用可进 git，如 /c/Program Files/JetBrains/*/plugins/maven/lib/maven3/bin/mvn.cmd、/c/Program Files/Java/jdk*、/d/jdk*、~/.nvm/versions/*）④ 全失败停下评论人工待办（人话提示要配哪些变量，无命令），禁止瞎猜路径。每级命中先 -v 验证再正式使用。填完后在当前 runtime 按链完整走一遍实测（报告注明），保证文档写法可直接复制执行；全工具均在 PATH 的项目可简化为一句「全部工具在 PATH，直接使用」 -->
 
 ---
 

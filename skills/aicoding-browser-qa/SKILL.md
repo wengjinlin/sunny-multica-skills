@@ -19,7 +19,7 @@ B="$HOME/.claude/skills/gstack/browse/dist/browse"
 
 - `status` 异常 / 二进制不存在 / Chromium 启动失败 → **降级模式**：跳过 §3 浏览器操作，按 §4 清单以代码走读 + 接口验证替代，报告注明「降级：基座不可用」。不阻断、不因此中止测试。
 - 目标 URL（含内网 192.168.x.x）连不通 → 同样降级并在报告列可达性待办。
-- **凭据检查**：读自身 env 的 TEST_ACCOUNT / TEST_PASSWORD / TEST_ROLE——缺失或值为 `__待填` 前缀 → 无法登录，按降级模式处理并在报告注明「降级：测试账号未配置」+ 附补齐命令 `multica agent env set <自身-UUID> --custom-env-file <文件>`（key：TEST_ACCOUNT / TEST_PASSWORD / TEST_ROLE，值由人类注入）。凭据值禁入报告/评论。
+- **凭据检查**：读自身**进程环境变量**（$TEST_ACCOUNT / $TEST_PASSWORD / $TEST_ROLE；agent 无权用 CLI 查询 env，不要尝试）——缺失 → 无法登录，按降级模式处理，报告「环境阻塞」节写人话提示（无命令）：「测试账号未配置——请在 Multica 网页 → Tester agent 详情 → 环境变量 中配置：TEST_ACCOUNT（测试账号名）、TEST_PASSWORD（测试账号密码）、TEST_ROLE（测试账号所属角色名）；值不入评论」。凭据值禁入报告/评论。
 - **目标地址口径**：本机起的服务从仓库配置自解析端口；远程联调地址查仓库 CLAUDE.md §3 基础设施节或 issue 验收点——地址不入 env（非敏感）。
 
 ## 2. 三档深度（issue 指定档位，缺省 Standard）
@@ -102,4 +102,4 @@ Visual/UI、Functional、UX、Content、Performance、Console/Errors、Accessibi
 - 只报告不修：禁改 `src/main/`，禁 commit 业务代码
 - 证据必须落盘（截图/复现步骤）；无证据的问题不进清单
 - 降级模式必须显式声明——手测冒充浏览器实测视为造假
-- 凭据只从 env 取：TEST_ACCOUNT / TEST_PASSWORD 的值禁入 issue/评论/test-report/截图文件名；账号缺失走降级并给注入命令，不向用户索要明文密码；菜单不可见/SEC-00021 归环境阻塞，不误判为缺陷
+- 凭据只从进程环境变量取：TEST_ACCOUNT / TEST_PASSWORD 的值禁入 issue/评论/test-report/截图文件名；账号缺失走降级并按 §1 给人话配置提示（无命令），不向用户索要明文密码；菜单不可见/SEC-00021 归环境阻塞，不误判为缺陷

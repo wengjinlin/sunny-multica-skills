@@ -46,7 +46,7 @@ plan.md Task {N}（对应 tasks.md {task-id}）
 
 ### 人工门协议（spec 人审 + DDL 执行 + 权限就绪）
 
-- **门的定义**：PM 产出全部工件（proposal/specs/design，+ddl.sql）后流程挂起，等发起人人审（三工件一次审）；含建表时 Developer 动工前 DDL 必须已被人工执行（表结构不存在 TDD 失败测试跑不了）；含 auth-resource.sql 时须人工在库上执行该 SQL 并在权限系统 UI 将菜单/按钮绑定到测试角色（角色名取自 Tester agent env 的 TEST_ROLE，PM 完成评论中已填具体值）——**只提醒不阻塞**， Tester（stage 4）点火前未回执由巡检提醒，不因此挂起 stage 2/3。
+- **门的定义**：PM 产出全部工件（proposal/specs/design，+ddl.sql）后流程挂起，等发起人人审（三工件一次审）；含建表时 Developer 动工前 DDL 必须已被人工执行（表结构不存在 TDD 失败测试跑不了）；含 auth-resource.sql 时须人工在库上执行该 SQL 并在权限系统 UI 将菜单/按钮绑定到测试账号所属角色（即人工给 Tester 配置 TEST_ROLE 环境变量时填的角色名；agent 无权查 env，提示只引用变量名不填具体值）——**只提醒不阻塞**， Tester（stage 4）点火前未回执由巡检提醒，不因此挂起 stage 2/3。
 - **先行提示**（建单时写入描述，审核人不需要猜操作；文本与 PM 指令内嵌模板同源，改动双处同改）：
 
   ```
@@ -55,7 +55,7 @@ plan.md Task {N}（对应 tasks.md {task-id}）
   1. 审 proposal.md + specs.md + design.md（+ ddl.sql 如有）
   2. 通过 → 评论「人审通过」+ @Mika（含 DDL 则在库上执行后一并评论「DDL 已执行」）
   3. 打回 → 评论打回意见 + @Mika（不用指定回给哪个 agent，路由由 Mika 判断）
-  4. （如 change 含 auth-resource.sql）在库上执行该 SQL + 在权限系统 UI 将其中菜单/按钮绑定到角色 {TEST_ROLE}（角色名见 PM 完成评论）→ 评论「权限已就绪」+ @Mika
+  4. （如 change 含 auth-resource.sql）在库上执行该 SQL + 在权限系统 UI 将其中菜单/按钮绑定到测试账号所属角色（即你给 Tester 配置 TEST_ROLE 环境变量时填的角色名）→ 评论「权限已就绪」+ @Mika
   ```
 
 - **Mika 处理通过回执**：metadata 置 `spec_review=approved`（含 DDL 再置 `ddl=executed`；含 auth-resource.sql 再置 `role_bind=ready`）→ 解锁 stage≥2 子 issue → 点火 Tech-Lead（「权限已就绪」回执只置 metadata，不改变已推进的 stage）。

@@ -106,4 +106,4 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 
 ## 自定义 env（仅 key 说明，值由人类注入）
 
-- GITLAB_TOKEN  # GitLab project access token，建 MR 用；值由人类经 multica agent env set 注入
+- GITLAB_TOKEN  # GitLab project access token，建 MR 用；值由人工在 agent 环境变量设置中注入（网页或本机 CLI，agent 自己无权写 env）

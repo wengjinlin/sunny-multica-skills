@@ -41,7 +41,7 @@
 
 **环境阻塞判定**：验收点菜单不可见或接口报 SEC-00021 → 角色未绑定新模块权限（绑定目标角色 = Tester env 的 TEST_ROLE），属环境阻塞非缺陷——记报告「环境阻塞」节提醒发起人绑定，不进问题清单、不影响健康评分。
 
-**报告要求**：健康评分（基线 100，critical -25 / high -10 / medium -4 / low -1）+ 环境阻塞节（无/有+待办）+ 分级问题表（每条带截图证据与复现步骤）+ ship-readiness 结论；浏览器基座不可用或测试账号未配置（env 缺 TEST_ACCOUNT/TEST_PASSWORD）时按本清单手测并显式声明「降级」。
+**报告要求**：健康评分（基线 100，critical -25 / high -10 / medium -4 / low -1）+ 环境阻塞节（无/有+待办）+ 分级问题表（每条带截图证据与复现步骤）+ ship-readiness 结论；浏览器基座不可用或测试账号环境变量未配置（Tester 的 TEST_ACCOUNT/TEST_PASSWORD）时按本清单手测并显式声明「降级」。
 
 <!-- 分析指引：纯后端/无页面的项目删除本节；sunny 系前端保留并在表单专项处补 SunnyForm/EditGrid 检查点 -->
 
