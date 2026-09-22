@@ -1,13 +1,18 @@
 ---
 name: aicoding-project-init
-description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 token 注入，自动验证，验证通过后创建 project 并绑定仓库资源。TRIGGER：用户要求「初始化项目 / 建项目绑仓库 / 配置 GitLab 集成 / 新工作区建项目」时使用。人工清单与验证流程在本文，项目描述模板在 project.md。
+description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 token 配置，chat 内自动验证（repo 注册 + checkout 拉取），验证通过后创建 project 并绑定仓库资源；全程 chat 会话内完成，不开 issue。TRIGGER：用户要求「初始化项目 / 建项目绑仓库 / 配置 GitLab 集成 / 新工作区建项目」时使用。人工清单与验证流程在本文，项目描述模板在 project.md。
 ---
 
 # aicoding-project-init：人工集成 → 自动验证 → 建项目
 
-本 skill 串联三类事项：**人工网页操作**（GitLab 连接 / webhook / token）→ **自动验证**（通过 DevOps 一次性任务）→ **自动建项目**（create + 资源绑定 + description 模板）。
+本 skill 串联三类事项：**人工网页操作**（GitLab 连接 / webhook / token）→ **chat 内自动验证**（repo 注册 + checkout 拉取）→ **自动建项目**（create + 资源绑定 + description 模板）。
 
-前置依赖：aicoding-agent-bootstrap 已跑完（验证环节需要 DevOps agent 及其 GITLAB_TOKEN）。
+前置依赖：aicoding-agent-bootstrap 建议先跑完（DevOps agent 及其 GITLAB_TOKEN 供后续建 MR 用）；本 skill 验证环节在 chat 内执行，不依赖 DevOps。
+
+## 执行模式（重要）
+
+- **全程在当前 chat 会话内直接执行**：人工 checklist 等待、验证命令、建项目操作都在本会话完成——**不开 issue、不派子任务给其他 agent**。issue 子任务完成后没有编排链路自动回到本流程，会断链等人工提醒，这是明确禁止的工作方式
+- 每步完成在 chat 输出简短结果让用户看到进度；只在需要用户提供信息或人工操作时停下等待
 
 > 安装链顺序：aicoding-importing-skills → aicoding-agent-bootstrap →（人工 env 注入，如 GITLAB_TOKEN）→ **本 skill** → aicoding-orchestration-bootstrap → aicoding-harness-bootstrap
 
@@ -16,7 +21,7 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 ### 第 0 步：前置检查（幂等探测）
 
 1. `multica runtime list --output json` 确认 runtime 可用
-2. `multica agent list --output json` 确认 **DevOps** 存在并记下 UUID（不存在 → 提示先跑 aicoding-agent-bootstrap，终止）
+2. `multica agent list --output json` 记录 **DevOps** 状态（不存在 → 提醒安装链顺序应先跑 aicoding-agent-bootstrap，但**不终止**：本 skill 验证不依赖 DevOps，项目可先建，DevOps 建好后补配 GITLAB_TOKEN 即可）
 3. `multica project list --output json` 探测同名 project：已存在 → 进入**对齐模式**（只补资源绑定与 description，不重建），记下 project-id
 4. 向用户确认：项目名 / 仓库 URL（下称 REPO_URL）
 
@@ -35,36 +40,27 @@ description: 初始化 Multica 项目：引导人工完成 GitLab 集成与 toke
 2. 点 **Test Hook**（push events）确认返回 **HTTP 200**（401 = secret 未填或填错）
 3. 老 GitLab（如 11.x）无 push options 建 MR 能力，hook 是 close intent 的唯一通路，不可跳过
 
-**C. token 注入（项目级）**
-```
-multica agent env set <DevOps-UUID> --custom-env-file <文件>
-# 文件内容：{"GITLAB_TOKEN": "<值>"}   # 值从安全渠道获取，不入库不入评论
-```
-（agent 无权执行 env set，必须人工；命令可直接复制）
+**C. token 配置（项目级）**
 
-### 第 2 步：自动验证（DevOps 一次性任务）
+给 DevOps agent 配置环境变量 **GITLAB_TOKEN**（GitLab project access token，建 MR 用）——入口：Multica 网页 → DevOps agent 详情 → 环境变量。值从安全渠道获取，不入库不入评论。（agent 无权写 env，必须人工配置）
 
-用户回复完成后，建一次性验证 issue（assign DevOps，评论用 `[@DevOps](mention://agent/<uuid>)` 触发，UUID 以 agent list 为准），任务描述：
+### 第 2 步：自动验证（本会话直接执行，不开 issue）
 
-```
-[verify] GitLab 集成验证（一次性，完成即 done）
-用你的 env 中 GITLAB_TOKEN 执行以下只读验证，评论回报每项结果后置 done：
-1. GET /api/v4/user（Header: PRIVATE-TOKEN）→ 回报 HTTP 码 + username
-2. 由 repo URL 取 project：GET /api/v4/projects/<url-encoded-path>（或 search）→ 回报 project id
-3. GET /api/v4/projects/<id>/hooks → 回报：hook 总数、各 hook 的 url 域名部分、
-   push_events / merge_requests_events 布尔值（只报元数据，不报 secret/token）
-```
+用户回复完成后，**在当前 chat 会话内直接执行**以下验证（不建 issue、不转派 DevOps——issue 子任务完成后不会自动回到本流程，会断链）：
+
+1. `multica repo add <REPO_URL> --description "<项目名>仓库"`（幂等，已存在不重复；失败多为 A 步 GitLab 连接未生效或 URL 有误）
+2. `multica repo checkout <REPO_URL>` 拉取仓库——成功 = A（workspace GitLab 连接）+ 仓库可达验证通过
 
 **结果判定**：
 | 现象 | 结论 | 动作 |
 |---|---|---|
-| user 返回 401 | C 未生效或值错 | 告知用户检查 token，重验 |
-| hooks 为空 / 无 URL 指向 Multica host | B 未生效 | 告知用户检查 hook，重验 |
-| 事件布尔为 false | B 勾选不全 | 告知用户补勾，重验 |
-| 全部通过 | 集成就绪 | 进第 3 步 |
+| repo add / checkout 报连接或认证失败 | A 未生效或 REPO_URL 有误 | 告知用户检查连接与 URL，重试 |
+| checkout 拉取超时 / 网络错误 | 仓库不可达 | 告知用户检查网络，重试 |
+| 成功 | 集成就绪 | 进第 3 步 |
 
-- A（连接本体）无 CLI 可查——由 hook 的存在且 Test 非 401 间接覆盖
-- 重验幂等：旧验证 issue 已 done 则新建一个；不要复用已关闭 issue
+- **webhook（B）**：无 CLI 可查，以用户在 B 步点 Test Hook 得到 HTTP 200 为准（人工已验证）；其影响面是 MR close intent，不阻塞建项目
+- **token（C）**：DevOps 的 GITLAB_TOKEN 本步不验证（执行会话读不到其他 agent 的环境变量）——留待 DevOps 首次建 MR 时自然验证，401 届时再检查配置
+- 重验幂等：直接重复上述两条命令即可，均可安全重跑
 
 ### 第 3 步：注册仓库 + 创建项目 + 绑定资源
 
@@ -82,7 +78,7 @@ multica agent env set <DevOps-UUID> --custom-env-file <文件>
 ### 第 4 步：报告
 
 - 项目 UUID + 可导航链接格式：`[<项目名>](mention://project/<project-id>)`
-- 验证证据摘要（DevOps 回报的 whoami / hook 状态）
+- 验证证据摘要（repo checkout 结果；webhook 以用户 Test Hook HTTP 200 为准；DevOps 的 GITLAB_TOKEN 未验证——首次建 MR 时自然验证）
 - 后续提示（未完成层提醒）：编排层（aicoding-orchestration-bootstrap）、仓库 harness（aicoding-harness-bootstrap）
 
 ## 铁律

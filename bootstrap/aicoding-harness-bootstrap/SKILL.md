@@ -9,6 +9,11 @@ description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/�
 - **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/{index.md + 7 篇 sunny 能力文档 + _template.md}` / `docs/lessons/{index.md + 各角色 md}` / `docs/human-test-reports/{index.md + _template.md}`（人工测试验证报告，人类维护 agent 只读） / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
 - **不建**：仓库侧 skills（全部在 Multica 侧维护，由 bootstrap skills 复现）、`.claude/commands/`（multica 架构下无用）
 
+## 执行模式（重要）
+
+- **全程在当前 chat 会话内直接执行**：仓库 checkout / 骨架铺设 / 代码分析 / commit / push 都由执行 agent 在本会话直接完成——**不开 issue、不派子任务给其他 agent**。issue 子任务完成后没有编排链路自动回到本流程，会断链等人工提醒，这是明确禁止的工作方式；也不要以「chat 会话不做仓库操作」的默认习惯转派
+- 分步推进时每步在 chat 输出简短进度（骨架 N 文件、分析填充进度、commit 结果）；只在需要用户提供信息（数据库密码确认、MR 目标分支等）时停下等待
+
 ## 执行流程
 
 ### 第 0 步：前置
