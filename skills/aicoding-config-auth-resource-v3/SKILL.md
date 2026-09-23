@@ -84,7 +84,7 @@ metadata:
 ## 交办流程（生成后）
 
 1. commit push 到 change 所在分支
-2. 在对应 issue 评论交办发起人：说明与 DDL 同等待遇、先跑第 0 段观测对齐（C_AREA 拼写；按钮现库惯例列）、执行后把验证 SELECT 输出贴回、再到权限系统 UI 绑定到测试账号所属角色（即发起人给 Tester 配置 TEST_ROLE 环境变量时填的角色名；agent 无权查 env，交办文字只引用变量名不填具体值）
+2. 在对应 issue 评论交办发起人：说明与 DDL 同等待遇、先跑第 0 段观测对齐（C_AREA 拼写；按钮现库惯例列）、执行后把验证 SELECT 输出贴回，并回贴页面菜单行 ID/C_MODNUMB 供前端 resourceConfig 回填、再到权限系统 UI 绑定到测试账号所属角色（即发起人给 Tester 配置 TEST_ROLE 环境变量时填的角色名；agent 无权查 env，交办文字只引用变量名不填具体值）
 3. 判读回贴输出：行数与字段值符合预期 → 触发 Tester 回归（前置：UI 角色绑定完成）；不符 → 按实际输出修正 SQL，再来一轮
 
 ## 注册后回填（发起人执行并回贴 ID/C_MODNUMB 后）
