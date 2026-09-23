@@ -6,7 +6,7 @@ description: 在全新仓库建设 harness：铺骨架（宪法/协作/审查/�
 # aicoding-harness-bootstrap：新仓库 harness 建设
 
 **范围声明**：
-- **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/{index.md + 7 篇 sunny 能力文档 + _template.md}` / `docs/lessons/{index.md + 各角色 md}` / `docs/human-test-reports/{index.md + _template.md}`（人工测试验证报告，人类维护 agent 只读） / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
+- **建**：`CLAUDE.md` / `AGENTS.md` / `REVIEW.md` / `docs/index.md`（导航） / `docs/architecture/{index.md + implicit-contracts.md}` / `docs/product/index.md` / `docs/database/{index.md + tables/_template.md}` / `docs/standards/{api,database,testing}.md` / `docs/templates/design-review-template.md`（前端设计人审模板） / `docs/help/{index.md + 7 篇 sunny 能力文档 + _template.md}` / `docs/lessons/{index.md + 各角色 md}` / `docs/human-test-reports/_template.md`（人工测试验证报告模板，头部含机制约定；人类维护 agent 只读，复盘由 aicoding-human-test-retro skill 执行并归档） / `.claude/hooks/guard_write.py` / `openspec/config.yaml`
 - **不建**：仓库侧 skills（全部在 Multica 侧维护，由 bootstrap skills 复现）、`.claude/commands/`（multica 架构下无用）
 
 ## 执行模式（重要）
@@ -49,8 +49,7 @@ docs/templates/design-review-template.md  # 前端设计人审模板（非 sunny
 docs/help/                     # 能力清单 + 7 篇 sunny 能力文档（po/s3/lock/sendoa/import/export/kafka）+ _template.md；非 sunny 体系项目按第 2 步指引重写
 docs/lessons/index.md          # 机制 + 角色索引（条目只写角色文件，索引不维护条目）
 docs/lessons/_template.md      # 角色文件模板 → 填充时按角色清单复制为 {Role}.md
-docs/human-test-reports/index.md    # 人工测试验证报告机制 + 记录索引 + 复盘覆盖游标（人类维护，agent 只读；复盘由 aicoding-human-test-retro skill 执行）
-docs/human-test-reports/_template.md  # 报告模板 → 测试者复制为 日期-分支名.md（只写现象+处理+文件，不归因）
+docs/human-test-reports/_template.md  # 报告模板（头部含机制约定）→ 测试者复制为 日期-分支名.md（只写现象+处理+文件，不归因；复盘后由 skill 归档至 archive/{期报日期}/）
 hooks/guard_write.py           → 落位到目标仓库 .claude/hooks/guard_write.py
 openspec/config.yaml
 ```
