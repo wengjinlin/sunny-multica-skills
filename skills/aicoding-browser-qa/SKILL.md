@@ -41,7 +41,7 @@ B="$HOME/.claude/skills/gstack/browse/dist/browse"
 对主 issue 验收点列出的每个页面/流程：
 
 1. `$B goto <url>` + `$B wait --networkidle`
-2. `$B snapshot -i -a -o qa/<page>.png`——交互元素树（@e refs）+ 注解截图（证据落盘）
+2. `$B snapshot -i -a -o openspec/changes/{change-id}/qa/<page>.png`——交互元素树（@e refs）+ 注解截图（证据落盘，随 change 工件归档；禁止写仓库根 qa/）
 3. 逐交互元素操作：`$B click @eN` / `$B fill @eN "测试值"` / `$B select @eN <值>` / `$B press Enter`；导航后 refs 失效须重新 snapshot
 4. 每次关键交互后：`$B console --errors`（新 JS 错误）+ `$B network`（4xx/5xx）
 5. 状态覆盖：空态、报错态、边界输入（空提交、超长文本、特殊字符）
@@ -100,6 +100,7 @@ Visual/UI、Functional、UX、Content、Performance、Console/Errors、Accessibi
 ## 铁律
 
 - 只报告不修：禁改 `src/main/`，禁 commit 业务代码
-- 证据必须落盘（截图/复现步骤）；无证据的问题不进清单
+- 证据必须落盘（截图/复现步骤），目录 `openspec/changes/{change-id}/qa/`（随 change 工件归档，不得散落仓库根 qa/）；无证据的问题不进清单
 - 降级模式必须显式声明——手测冒充浏览器实测视为造假
 - 凭据只从进程环境变量取：TEST_ACCOUNT / TEST_PASSWORD 的值禁入 issue/评论/test-report/截图文件名；账号缺失走降级并按 §1 给人话配置提示（无命令），不向用户索要明文密码；菜单不可见/SEC-00021 归环境阻塞，不误判为缺陷
+
