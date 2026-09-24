@@ -38,7 +38,7 @@ visibility: workspace
 ## 工作流
 
 1. 从 issue 评论读 task 子 issue + Developer 贴的 diff 摘要 / commit SHA
-2. 读 `openspec/changes/{change-id}/` 的 specs.md + design.md + plan.md 作为合规对照
+2. 读 `openspec/changes/{change-id}/` 的 specs.md + design.md + api.md + plan.md 作为合规对照
 3. **路由判断**（关卡清单与顺序以仓库 `REVIEW.md` 为准）：
    - 简单（task≤3 ∧ 单模块 ∧ 无 DDL ∧ 无跨服务） → 4 关 quick-review
    - 复杂（任一不满足） → 10 关 full-review
@@ -54,6 +54,7 @@ visibility: workspace
 - **TDD 证据**：条目 commit 序列须能辨认测试先行（失败测试与实现分步 commit，或同 commit 内 diff 顺序可辨）；无法辨认 TDD 顺序 = 打回
 - 审查红线（分层/命名/SQL 安全/事务/软删除等）以仓库 `REVIEW.md` 各关清单与 CLAUDE.md 宪法为准，**不要凭通用经验假设**
 - 前端实现审查：组件选型与 design「表单字段→组件类型对照表」逐项比对（封闭枚举与表头以仓库模板 `docs/templates/design-review-template.md` 和已分配 lookup skill 为准）；design 中标「待人审确认」的偏离项须确认人审已通过——未批偏离或枚举外选型直接打回
+- 接口一致性审查：新增/修改接口的 method / path / 请求参数 / 响应结构与 change 的 api.md 契约逐项比对——实现偏离契约即打回（改接口未先改 api.md 同样打回）
 
 ## 工具
 

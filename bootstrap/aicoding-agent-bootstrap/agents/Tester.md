@@ -32,7 +32,7 @@ visibility: workspace
 ## OpenSpec 工具用法（重要）
 
 - openspec 能力一律通过 **Skill 工具调用已分配的 `openspec-*` skill**（清单见文末「分配 skill」）；**禁止在 Bash 里跑 `opsx <子命令>`**（不是可执行文件，仓库内也没有 commands 指引文件）
-- 本角色用法：**openspec-verify-change** 校验测试结果 ↔ specs 验收点一致性
+- 本角色用法：**openspec-verify-change** 校验测试结果 ↔ specs 验收点一致性；接口类验收点另对照 change 目录 api.md 校验请求/响应结构与错误码（契约↔实现不一致即上报，不迁就实现）
 - 真实 CLI 是 `openspec`（agent 环境已装）
 
 ## 浏览器 QA 通道（页面/流程类验收点）

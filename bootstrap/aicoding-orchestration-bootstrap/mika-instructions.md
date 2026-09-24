@@ -17,7 +17,7 @@
 
 - 建单执行者是 PM：模板全文已内嵌于 PM 指令（aicoding-agent-bootstrap/agents/PM.md「用户确认后建单」节），PM 建单时照填描述；本节是 Mika 守门校验与 stage 路由的基准。两处文本必须一致——**权威源在本编排层**，变更须同步改 PM 指令，防双轨漂移。
 - 描述必含：change-id、下方 stage 链（含定制点如人审门）、「人工门」段、验收点；人工可改，**issue 描述是唯一执行权威**：
-  1 PM:proposal+specs+design（+ddl.sql）→ 【人工门：人审（三工件一次审）+ DDL 执行 + 权限就绪（含 auth-resource.sql 时）】→ 2 Tech-Lead:tasks（含排他文件清单）→ 3 Developer:代码（可多实例并行）→ 4 Tester:测试报告 → 5 DevOps:发布记录
+  1 PM:proposal+specs+design+api（+ddl.sql）→ 【人工门：人审（四工件一次审，api.md 随 design 审）+ DDL 执行 + 权限就绪（含 auth-resource.sql 时）】→ 2 Tech-Lead:tasks（含排他文件清单）→ 3 Developer:代码（可多实例并行）→ 4 Tester:测试报告 → 5 DevOps:发布记录
 - 仓库 AGENTS.md 不再维护链序（stage 编号 ↔ 角色字典见其 §3 速查表）。
 
 ### 代码审查点火（stage 3 task 级微循环，强制）
@@ -46,13 +46,13 @@ plan.md Task {N}（对应 tasks.md {task-id}）
 
 ### 人工门协议（spec 人审 + DDL 执行 + 权限就绪）
 
-- **门的定义**：PM 产出全部工件（proposal/specs/design，+ddl.sql）后流程挂起，等发起人人审（三工件一次审）；含建表时 Developer 动工前 DDL 必须已被人工执行（表结构不存在 TDD 失败测试跑不了）；含 auth-resource.sql 时须人工在库上执行该 SQL 并在权限系统 UI 将菜单/按钮绑定到测试账号所属角色（即人工给 Tester 配置 TEST_ROLE 环境变量时填的角色名；agent 无权查 env，提示只引用变量名不填具体值）——**只提醒不阻塞**， Tester（stage 4）点火前未回执由巡检提醒，不因此挂起 stage 2/3。
+- **门的定义**：PM 产出全部工件（proposal/specs/design/api，+ddl.sql）后流程挂起，等发起人人审（四工件一次审，api.md 随 design 审）；含建表时 Developer 动工前 DDL 必须已被人工执行（表结构不存在 TDD 失败测试跑不了）；含 auth-resource.sql 时须人工在库上执行该 SQL 并在权限系统 UI 将菜单/按钮绑定到测试账号所属角色（即人工给 Tester 配置 TEST_ROLE 环境变量时填的角色名；agent 无权查 env，提示只引用变量名不填具体值）——**只提醒不阻塞**， Tester（stage 4）点火前未回执由巡检提醒，不因此挂起 stage 2/3。
 - **先行提示**（建单时写入描述，审核人不需要猜操作；文本与 PM 指令内嵌模板同源，改动双处同改）：
 
   ```
   ## 人工门
   stage 1 完成后你需要：
-  1. 审 proposal.md + specs.md + design.md（+ ddl.sql 如有）
+  1. 审 proposal.md + specs.md + design.md + api.md（api 契约随 design 一起审；+ ddl.sql 如有）
   2. 通过 → 评论「人审通过」+ @Mika（含 DDL 则在库上执行后一并评论「DDL 已执行」）
   3. 打回 → 评论打回意见 + @Mika（不用指定回给哪个 agent，路由由 Mika 判断）
   4. （如 change 含 auth-resource.sql）在库上执行该 SQL + 在权限系统 UI 将其中菜单/按钮绑定到测试账号所属角色（即你给 Tester 配置 TEST_ROLE 环境变量时填的角色名）→ 评论「权限已就绪」+ @Mika
