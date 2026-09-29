@@ -5,13 +5,15 @@ sunny 项目 Multica AI 编排工作区的技能仓库，分两类工件：
 - **`skills/`** — 运行期技能：挂在 Multica 角色 agent 上，在 issue 协作流程中被触发执行
 - **`bootstrap/`** — 建区脚手架：新工作区/新仓库的一次性复现与初始化流程
 
-## skills/ — 运行期技能（6 个）
+## skills/ — 运行期技能（8 个）
 
 | 技能 | 定位 | 主要使用者 |
 |---|---|---|
-| `aicoding-lookup-ui-reference-v3` | 前端 UI 选型速查手册：标准模块（form-modal / table-modal / form-table-modal、导入导出）、页面模板（query-list）、封装组件（SunnyForm / SunnyModal / SunnyBusinessSearch / useSunnyEditGrid 等，来自 `@sunny-base-web/ui`）三层选型，Arco 原生仅兜底。只输出查阅结论，不生成业务代码 | 全角色（写/评审 Vue 页面前） |
+| `aicoding-lookup-ui-reference-v2` | 前端 UI 选型速查手册（**Vue2 老框架**：kunkka / sunnygroup-components 资源驱动系）：官方代码生成器模板（queryList / formDialog / formTableDialog 等）、成套模块（importDialog / exportDialog）、框架组件（KunkkaForm / KunkkaModal / KunkkaUxGrid 等），Element UI 仅兜底。只输出查阅结论，不生成业务代码 | 全角色（写/评审 Vue2 页面前） |
+| `aicoding-lookup-ui-reference-v3` | 前端 UI 选型速查手册（**Vue3 新框架**）：标准模块（form-modal / table-modal / form-table-modal、导入导出）、页面模板（query-list）、封装组件（SunnyForm / SunnyModal / SunnyBusinessSearch / useSunnyEditGrid 等，来自 `@sunny-base-web/ui`）三层选型，Arco 原生仅兜底。只输出查阅结论，不生成业务代码 | 全角色（写/评审 Vue3 页面前） |
 | `aicoding-db-schema-export` | 数据库表结构文档导出：连活库导出表/列/索引/主键/外键/注释，生成或重生成 `docs/database/` 文档，是它的唯一生成通道（禁止临时手写连接与 SQL） | Developer（DDL 后收尾） |
-| `aicoding-config-auth-resource-v3` | 权限资源 SQL 生成：从 design.md 的前端页面/按钮清单生成 `auth-resource.sql`（AUTH_RES_MENU / AUTH_MODULE_URL / AUTH_RES_BUTTON 三表注册脚本）。只生成永不执行、永不生成角色授权 | PM（change stage 1 三件套之一） |
+| `aicoding-config-auth-resource-v2` | 权限资源 SQL 生成（**Vue2 老框架**，vue-admin-template 系）：菜单树 + 接口 + 按钮 + 字段资源（含表结构对齐 DDL 段）。只生成永不执行、永不生成角色授权 | PM（Vue2 项目 change stage 1） |
+| `aicoding-config-auth-resource-v3` | 权限资源 SQL 生成（**Vue3 新框架**）：从 design.md 的前端页面/按钮清单生成 `auth-resource.sql`（AUTH_RES_MENU / AUTH_MODULE_URL / AUTH_RES_BUTTON 三表注册脚本）。只生成永不执行、永不生成角色授权 | PM（change stage 1 三件套之一） |
 | `aicoding-browser-qa` | 报告式浏览器 QA：按 issue 验收点对 Web 页面分级测试（Quick / Standard / Exhaustive），产结构化 QA 报告（健康评分 + 分级问题表 + 截图证据）。只报告不修代码；依赖 gstack 浏览器基座，缺失时降级手测清单 | Tester（stage 4） |
 | `aicoding-harness-audit` | 结构文档增量对账：从上次同步基线到 `origin/master` 的变更 diff 映射到应更新的 harness 结构文档（模块表/架构字典/隐性约定/术语表/能力清单），可自动项走 MR，DDL 与存疑项提醒人工 | DocKeeper（周级 autopilot） |
 | `aicoding-human-test-retro` | 人工测试报告复盘归因：游标增量读取 `docs/human-test-reports/` 未读报告，逐 ⚠️ 问题做四源证据链归因（报告 × MR diff × OpenSpec 工件 × test-report），产期报 + lesson 草案走 retro 分支 MR，人审合并即决策 | DocKeeper（周级 autopilot） |
