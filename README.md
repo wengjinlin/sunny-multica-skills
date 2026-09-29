@@ -51,7 +51,7 @@ multica agent skills add <Mika> --skill-ids <主skill-id>   # 挂给 Mika
 不想一键时，按原安装链逐个运行：
 
 ```
-aicoding-skills-bootstrap（拉取全部 skill，含 superpowers 系列）
+aicoding-skills-bootstrap（拉取 skill：本仓库默认只扫 skills/ 目录，bootstrap/ 下的脚手架须指定目录参数一并拉取；superpowers 系列另从 GitHub 源 obra/superpowers 拉）
   → aicoding-agent-bootstrap（创建角色 agent）
   → 人工 env 注入（如 GITLAB_TOKEN、测试账号等，Multica 网页操作）
   → aicoding-project-init（建项目绑仓库）

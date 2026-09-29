@@ -42,4 +42,4 @@
 | Developer | NODE_BIN | 本机 node 可执行文件绝对路径（前端构建用）；纯后端项目不填 |
 | Tester | MVN_BIN / JAVA_HOME / NODE_BIN | 同上（测试命令解析用） |
 
-> 权威源：`aicoding-agent-bootstrap` 的 `agents/*.md` 各文件「## 自定义 env」节——本表是快照，配置文件更新后以文件为准，改配置须同步改本表。
+> 权威源：`aicoding-agent-bootstrap` 的 `agents/*.md` 各文件「## 自定义 env」节——本表是快照，配置文件更新后以文件为准，改配置须同步改本表。例外：**Mika 的 GITLAB_TOKEN 行与条件项 DB_PASSWORD 行归 aicoding-workspace-setup 编排层所有**（agents/ 目录无 Mika 配置文件，DB_PASSWORD 是 harness 条件项），不在 agents 同步范围。

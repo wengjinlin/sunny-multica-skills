@@ -94,7 +94,7 @@ metadata:
 
 | 阶段 | 探测命令 | 「已完成」判据 |
 |---|---|---|
-| ② 拉技能 | `multica skill list --output json` | 本仓库 + superpowers 系列全部 skill 名在库 |
+| ② 拉技能 | `multica skill list --output json` + `multica agent skills list <Mika-UUID>` | 本仓库 + superpowers 系列全部 skill 名在库，**且** 6 个编排 skill（5 个 bootstrap + aicoding-db-schema-export）已挂载 Mika——导入与挂载是两步，任一不满足即续跑 ②（挂载是追加式，重跑安全） |
 | ③ 建 agent | `multica agent list --output json` | agents/ 配置的 7 个 agent 名全部存在 |
 | ④ 人工窗口 | `multica repo add <REPO_URL>` + `multica repo checkout <REPO_URL>` | add / checkout 成功（间接证明 GitLab 连接与仓库可达）；**env 不可探测，靠对话上下文** |
 | ⑤ 建项目 | `multica project list --output json` | 同名 project 存在且 github_repo 资源已绑定 |
@@ -108,7 +108,7 @@ metadata:
 | 级别 | 例 | 处置 |
 |---|---|---|
 | 非致命 | 个别 skill 导入失败、agent 某项挂载缺失、附件超限 | 登记待办，继续（继承子 skill「不中断批处理」铁律） |
-| 致命停等 | GitLab 连接失败、repo checkout 不可达、数据库密码拿不到 | 停下，人话报告修正指引，用户修好回「继续」后幂等重验 |
+| 致命停等 | GitLab 连接失败、repo checkout 不可达、数据库密码拿不到、密码齐但库连不上（网络/防火墙） | 停下，人话报告修正指引，用户修好回「继续」后幂等重验；连不上库可转 harness 原有的人工回传 `schema_dump.json` 降级路径（仍是脚本导出，仍属停等人工） |
 | 降级 | Mika 建 MR 失败（token 错 / 权限不足） | harness 产物保留，MR 转人工待办 |
 
 ## 终局报告
@@ -133,4 +133,4 @@ metadata:
 - 时序 / 断点判据 / 人工窗口编排 / 终局报告改动 → 改本 skill
 - 单个环节的具体做法改动 → 改对应子 skill（本 skill 不跟）
 - 子 skill 保持独立可分步手动运行（用户不想一键时仍可按 README 分步链跑）
-- `references/human-checklist.md` 的 env 表是 agents/*.md 的快照：agents 配置变更须同步改快照
+- `references/human-checklist.md` 的 env 表是 agents/*.md 的快照：agents 配置变更须同步改快照；**Mika 的 GITLAB_TOKEN 行与条件项 DB_PASSWORD 行归本 skill 所有**（agents/ 目录无 Mika 配置文件，DB_PASSWORD 是 harness 条件项）
