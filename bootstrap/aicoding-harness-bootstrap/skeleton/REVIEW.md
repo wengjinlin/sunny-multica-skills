@@ -41,9 +41,9 @@
 
 - [ ] 本次打回/审查发现的问题是否命中 `docs/lessons/` 角色文件已有条目？
   - 命中 → 该条目曝光不足，在 review-report 标注「建议晋升宪法」（同类第 2 次），@Mika 转人类确认
-- [ ] 本次是否产生新教训？
-  - 是 → review-report 末尾按 `docs/lessons/index.md` 条目格式追加条目（DevOps 归档时落盘到对应角色文件）
-- [ ] 通过的改动抽查 Developer 是否读过相关 lesson（review-report 中引用条目编号）
+- [ ] 本次是否**打回**？（通过的审查最多留「观察」，观察不成为 lesson）
+  - 打回且产生新教训 → review-report 末尾按 `docs/lessons/index.md` 条目格式留条目（由 DevOps 随该 change 下一次 commit 批量落盘，无需你另行要求）
+- [ ] 通过的改动抽查 Developer 是否读过相关 lesson（review-report 中引用「文件 + 条目标题短语」）
 
 ### 关 4：archive（归档准备）
 
@@ -124,9 +124,9 @@
 
 - [ ] 本次打回/审查发现的问题是否命中 `docs/lessons/` 角色文件已有条目？
   - 命中 → 该条目曝光不足，在 review-report 标注「建议晋升宪法」（同类第 2 次），@Mika 转人类确认
-- [ ] 本次是否产生新教训？
-  - 是 → review-report 末尾按 `docs/lessons/index.md` 条目格式追加条目（DevOps 归档时落盘到对应角色文件）
-- [ ] 通过的改动抽查 Developer 是否读过相关 lesson（review-report 中引用条目编号）
+- [ ] 本次是否**打回**？（通过的审查最多留「观察」，观察不成为 lesson）
+  - 打回且产生新教训 → review-report 末尾按 `docs/lessons/index.md` 条目格式留条目（由 DevOps 随该 change 下一次 commit 批量落盘，无需你另行要求）
+- [ ] 通过的改动抽查 Developer 是否读过相关 lesson（review-report 中引用「文件 + 条目标题短语」）
 
 ### 关 10：archive（归档）
 

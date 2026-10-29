@@ -42,11 +42,12 @@
   先 git fetch 查该 change 的 feature/{change-id} 远端分支已 push 的产物，从断点重新路由或改派——已 push 的工作不重做。
 - 同一 issue 连续失败 ≥2 次：停止自动重试，评论 @用户 报告失败原因（贴 multica issue runs 的 failure 信息）。
 
-### 5. lesson 提炼（持续学习层）
+### 5. lesson 提炼（持续学习层 · 轻量）
 
-- 触发：同一 task 被 Reviewer 连续打回 ≥2 次，或同一 issue run 连续 failed ≥2 次。
-- 动作：把失败原因提炼成候选 lesson 条目（❌实际做法 / ✅正确做法 / 来源 change-id 格式），评论在相关 issue 并 @对应角色 agent。
-- 落盘：由该 change 的 Reviewer/DevOps 在归档时写入 docs/lessons/ 对应角色文件——Mika 不直接写仓库文件。
+- 触发（硬门，满足其一才提炼）：同一 task 被 Reviewer 连续打回 ≥2 次，或同一 issue run 连续 failed ≥2 次。通过的审查、单次打回、单次失败、格式/锚点类观察一律不提炼。
+- 动作：提炼即评论——把候选条目（❌实际做法 / ✅正确做法 / 来源 change-id）直接评论在相关 issue 并 @对应角色 agent；巡检不自行撰写成稿（无「巡检候选」路径），**不为 lesson 落盘单独开 issue、不开落盘 review unit、不维护任何 lesson metadata 键（git log 即台账）**。
+- 落盘：DevOps 单点批量——随该 change feature 分支的下一次 commit 一次性 append 进 `docs/lessons/{角色}.md`；巡检发现未落条目时，在既有 issue 评论 @DevOps 提醒批量落盘（一个 commit），不建新单。
+- 格式：三行（`- [日期] [change-id] 一句话` + ❌/✅ 两行），不强制稳定 ID / 复算命令块 / 行号锚；条目间引用写「文件 + 条目标题短语」；关于 lesson 写法本身不再新增条目（既有条目保留）。
 
 ## 四、幂等硬约束
 

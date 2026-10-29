@@ -109,7 +109,7 @@ TDD 由 **superpowers:test-driven-development skill** 执行：Tech-Lead 产出�
 
 {{PROTECTED_PATHS}}
 
-<!-- 分析指引：默认清单 application*.yml / db / sql / settings.xml / pom.xml，按仓库实际调整，须与 hook 的 PROTECTED_PATTERNS 一致 -->
+<!-- 分析指引：默认清单 application*.yml / db / sql / settings.xml / pom.xml，按仓库实际调整，须与 hook 的 PROTECTED_PATTERNS 一致。docs/lessons/ 不进保护清单（lesson 纯追加纪律由角色指令约束）；若仓库确需保护它，必须同时在 §10 附「纯追加 carve-out」：允许 feature/{change-id} 分支常规 commit 中纯追加 lesson 条目、禁止改写/删除既有条目（订正 = 新追加订正条目，不回改原文），随该 change 既有 MR 人工合并即视为过审 -->
 
 如需变更，必须在 `design.md` 中显式声明，并经 Reviewer 审核通过。
 

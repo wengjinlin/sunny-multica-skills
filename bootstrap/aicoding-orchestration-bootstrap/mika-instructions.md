@@ -25,7 +25,7 @@
 - Reviewer **不在 stage 链上**——它是嵌在 stage 3 内的横向质量关卡：task 子 issue 完成 ≠ 直接推进，必须先过 Reviewer 审查。
 - **Mika 收到 Developer 类完成信号**（task 子 issue 上的【编排信号】完成）：评论点名 Reviewer 审查（[@Reviewer](mention://agent/<uuid>) 触发），评论附 task 编号与 review 范围（对应 plan.md 条目）；**子 issue 保持 in_review——不转 done、不开下一 task**。
 - **Reviewer 通过评论 @Mika** → 推进下一个 task；tasks 全部完成 → 转 Tester（stage 4）。**Reviewer 打回**（其评论已转 in_progress @原 Developer）→ 不路由，等 Developer 返工后重发完成信号重走审查。
-- 同一 task 连续打回 ≥2 次 → 按巡检剧本「lesson 提炼」处置。
+- 同一 task 连续打回 ≥2 次 → 按巡检剧本「lesson 提炼」处置（轻量：提炼即评论成稿即完成；落盘由 DevOps 随该 change 下一次 commit 批量 append。Mika 不开 lesson 补登单、不开落盘 review unit、不维护 lesson metadata 键——git log 即台账）。
 
 ### task 子 issue 描述模板（Mika 建 task 子 issue 时写入）
 

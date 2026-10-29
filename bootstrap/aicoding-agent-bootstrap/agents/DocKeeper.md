@@ -47,7 +47,7 @@ visibility: workspace
 - **开工必读**：Read `docs/lessons/index.md` + 本角色文件 `docs/lessons/DocKeeper.md`（及下方交叉角色文件），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**DocKeeper + DevOps** 文件
-- 你写：对账中发现的流程坑（如某类变更反复漏文档同步）在对账报告末尾附 lesson 草稿（由 DevOps 归档时落盘）
+- 你写：对账中发现的流程坑（如某类变更反复漏文档同步）在对账报告末尾附 lesson 条目，并顺手 append 进 `docs/lessons/DocKeeper.md`（同 commit，随对账 MR 入库）
 
 ## 完成信号（强制）
 

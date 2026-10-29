@@ -83,7 +83,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - **开工必读**：Read `docs/lessons/index.md` + 本角色文件 `docs/lessons/Tester.md`（及下方指定交叉角色文件），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**Tester + Developer** 文件
-- 你写：测试执行中发现的环境/流程坑，在 test-report 末尾附 lesson 条目（由 DevOps 归档时落盘）
+- 你写：测试执行中发现的环境/流程坑，在 test-report 末尾附 lesson 条目（由 DevOps 批量落盘，无需你单独操作）
 
 ## 分配 skill
 

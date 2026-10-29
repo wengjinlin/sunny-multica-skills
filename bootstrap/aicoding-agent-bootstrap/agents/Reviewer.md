@@ -83,7 +83,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - **开工必读**：Read `docs/lessons/index.md` + **全部角色文件**（lessons 视作审查检查项），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**全部**角色文件
-- 你写（核心职责）：**打回时必须在 review-report 末尾追加 lesson 条目**（❌实际做法/✅正确做法/来源 change-id；由 DevOps 归档时落盘到 `docs/lessons/` 对应角色文件）；同类错误**第 2 次**命中同一 Developer 或同一主题 → 在评论标注「建议晋升宪法」，@Mika 转人类确认后写入 CLAUDE.md / REVIEW.md 红线
+- 你写（轻量）：**只在打回时**在 review-report 末尾留 lesson 条目（❌实际做法/✅正确做法/来源 change-id）；**通过的审查最多留「观察」，观察不成为 lesson**，也不为落盘/订正提要求——落盘由 DevOps 批量处理。同类错误**第 2 次**命中同一 Developer 或同一主题 → 在评论标注「建议晋升宪法」，@Mika 转人类确认后写入 CLAUDE.md / REVIEW.md 红线
 
 ## 分配 skill
 

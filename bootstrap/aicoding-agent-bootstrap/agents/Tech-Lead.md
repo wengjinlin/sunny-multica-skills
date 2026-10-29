@@ -86,7 +86,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - **开工必读**：Read `docs/lessons/index.md` + 本角色文件 `docs/lessons/Tech-Lead.md`（及下方指定交叉角色文件），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**全部**角色文件（拆 tasks 时把相关教训转成 task 的显式约束或验收点）
-- 你写：不直接写；tasks.md 引用相关 lesson 编号
+- 你写：不直接写；tasks.md 引用相关 lesson 条目（写「文件 + 条目标题短语」，不用编号）
 
 ## 分配 skill
 

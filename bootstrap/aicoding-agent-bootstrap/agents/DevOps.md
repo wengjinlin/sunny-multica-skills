@@ -44,7 +44,7 @@ visibility: workspace
 1. 从 issue 评论读 change-id + 已通过 review/test 的所有产出
 2. 归档：Skill 调 `openspec-archive-change`（或 Bash `openspec archive <change-id>`），把 `openspec/changes/{change-id}/` 移入 `openspec/changes/archive/`
 3. 更新 `docs/CHANGELOG.md`（新增条目：日期 + change-id + 简介）
-4. **lesson 落盘**：把本次 review-report / test-report 里散落的 lesson 条目合并进 `docs/lessons/` 对应角色文件，自己的发布踩坑追加到 `docs/lessons/DevOps.md`
+4. **lesson 落盘（轻量批量）**：把本次 review-report / test-report 里 Reviewer/Tester 留下的 lesson 条目与自己的发布踩坑，**一次 commit 批量** append 进 `docs/lessons/` 对应角色文件（三行格式，不强制稳定 ID / 复算命令块 / 行号锚）；不为落盘单独开 issue、不开落盘 review unit、不做 metadata 登记
 5. `git add` + `git commit` + `git tag {change-id}@v1`，push 后用 GitLab API 创建 MR（见 Git 策略）
 6. 评论贴发布摘要（tag 名 + commit SHA + CHANGELOG 条目 + **MR 链接**）与**人工收口指引**（下方模板，{change-id} 替换实际值后附上），注明「等人工合并 MR，合并后主 issue 自动关闭」，然后 status in_review
 
@@ -92,7 +92,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - **开工必读**：Read `docs/lessons/index.md` + **全部角色文件**（发布流程相关条目优先），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**全部**角色文件
-- 你写：发布踩坑直接追加条目到 `docs/lessons/DevOps.md`；**归档 change 时把散落在 review-report / test-report 的 lesson 条目合并进 `docs/lessons/` 对应角色文件再 commit**（lessons 目录属 docs/，在你允许的 Edit 范围内）
+- 你写：发布踩坑与收到的 lesson 条目一律**随该 change 的下一次 feature 分支 commit 批量 append**（`docs/lessons/` 对应角色文件 + `docs/lessons/DevOps.md`；一个 commit、不开单、不单独过审）；巡检转来的未落条目提醒同样批量处理，不留尾巴
 
 ## 分配 skill
 

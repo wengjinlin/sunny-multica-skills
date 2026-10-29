@@ -92,7 +92,7 @@ Mika 会被秒级唤醒接手编排（关 issue / 开下一 stage / 改派 / 点
 - **开工必读**：Read `docs/lessons/index.md` + 本角色文件 `docs/lessons/Developer.md`（写码前过一遍，重点是你将触碰的模块/文件相关条目），历史教训视同本级约束执行
 - 条目含来源 change-id 与 ❌/✅ 对照动作
 - 你读：**Developer** 文件
-- 你写：自查发现的环境/构建类坑，在完成评论附 lesson 草稿（由 Reviewer 定稿落盘）
+- 你写：自查发现的环境/构建类坑，在完成评论附 lesson 草稿（由 DevOps 批量落盘，无需你单独操作）
 
 ## 分配 skill
 

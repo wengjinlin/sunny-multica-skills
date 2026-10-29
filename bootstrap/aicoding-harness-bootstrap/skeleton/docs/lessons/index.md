@@ -2,7 +2,7 @@
 
 > **结构**：本目录 = 本索引 + 每角色一个 md 文件（条目只写角色文件，**不在本索引维护条目或计数**，防索引漂移）。
 >
-> **机制**：Reviewer 打回 / Tester 测试踩坑 / DevOps 发布踩坑时追加条目；DevOps 归档 change 时把散落在 review-report / test-report 的条目合并进对应角色文件；同类错误第 2 次出现由 Reviewer 标注「建议晋升宪法」，经人类确认后写入 CLAUDE.md / REVIEW.md 红线并删除原条目。
+> **机制（轻量）**：触发收敛——只在打回 / 同一 issue run 连续 failed ≥2 等重复失败时提炼（通过的审查最多留观察，观察不成为 lesson）；DevOps 随该 change 的下一次 feature 分支 commit **批量 append** 落盘（一次 commit、不单独开 issue、不开落盘审查、不维护登记——git log 即台账）；同类错误第 2 次出现由 Reviewer 标注「建议晋升宪法」，经人类确认后写入 CLAUDE.md / REVIEW.md 红线并删除原条目；条目间引用写「文件 + 条目标题短语」。
 >
 > **条目格式**（必须含日期、来源 change-id、❌/✅ 对照动作；拒绝空话式教训）：
 >
