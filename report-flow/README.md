@@ -43,12 +43,28 @@
 |---|---|
 | `README.md` | 本文件：方案总览与对照 |
 | `design.md` | 主设计文档：流程 / 角色 / 工件模板 / 人工门 / 编排对接 / 部署方式 |
-| `agents/Report-PM.md` | 报表 PM agent 指令（可直接用于 aicoding-agent-bootstrap 创建） |
-| `agents/Report-Developer.md` | 报表 Developer agent 指令 |
-| `agents/Report-Reviewer.md` | 报表 Reviewer agent 指令 |
-| `agents/Report-DevOps.md` | 报表 DevOps agent 指令 |
-| `report-workspace-bootstrap/` | **一键建区 skill**（design.md §10 预留脚手架）：主 SKILL 编排七步 + 报表版 Mika 编排（`mika-instructions-report.md`）+ 巡检剧本（`autopilot-report.md`）+ 人工清单（`references/human-checklist.md`）+ 业务仓库 `docs/report-flow/` 骨架（`skeleton/`，§9.2 八文件） |
+| `agents/Report-PM.md` 等 4 个 | 报表 agent 配置（**上游权威源**，design.md 登记位置） |
+| `report-workspace-bootstrap/` | **一键建区 skill**（design.md §10 预留脚手架）：编排型主 skill，只管时序 / 断点 / 人工窗口 / 终局报告，各环节做法调分步 skill；`references/human-checklist.md` 为人工窗口清单 |
+| `bootstrap/aicoding-report-agent-bootstrap/` | **分步①建 agent**：框架协议 + `agents/` 配置副本（同步自上游 `report-flow/agents/`） |
+| `bootstrap/aicoding-report-orchestration-bootstrap/` | **分步②编排层**：巡检剧本（`autopilot-report.md`）与 Mika 报表单链版入口（`mika-instructions-report.md`）的权威源；doc-audit / retro 不装 |
+| `bootstrap/aicoding-report-harness-bootstrap/` | **分步③harness 增量**：`skeleton/`（§9.2 八文件）权威源 + 零侵入自检 + 自动建 MR |
 | `skills/` | 4 个共用业务 skill 的**自包含副本**（lookup-v2/v3、config-auth-v2/v3，拷贝自仓库 `skills/`，上游改动须同步）；报表工作区可通过 `.../tree/main/report-flow` 整目录拉取 |
+
+### 分步建区链（不想一键时按序手跑）
+
+| 步 | 用什么 | 说明 |
+|---|---|---|
+| 1. 拉业务技能 | `aicoding-skills-bootstrap`（复用） | repo 指到本仓库，only = lookup-v2/v3 + config-auth-v2/v3（或 `.../tree/main/report-flow/skills` 全量）；superpowers / openspec 系不拉 |
+| 2. 建 agent | `aicoding-report-agent-bootstrap` | 4 个 Report-*（Mika 内置）；报告输出 env 人类待办 |
+| 3. 人工 env 注入 | Multaca 网页 | Developer：MVN_BIN / JAVA_HOME / NODE_BIN；DevOps：GITLAB_TOKEN |
+| 4. 建项目 | `aicoding-project-init`（复用） | 绑定同一业务仓库，GitLab 集成三事项照其 checklist |
+| 5. 编排层 | `aicoding-report-orchestration-bootstrap` | 仅巡检兜底 + Mika 报表版入口；doc-audit / retro 不装 |
+| 6. harness 增量 | `aicoding-report-harness-bootstrap` | skeleton → `feature/init-report-harness` → 自动建 MR |
+| 7. 人审 | 人工 | 合并 MR（+ 无 CLAUDE.md 时补填「项目事实登记」节） |
+
+### 副本同步约定
+
+`report-flow/agents/`（上游）→ `bootstrap/aicoding-report-agent-bootstrap/agents/`；仓库根 `skills/`（上游）→ `report-flow/skills/`。上游改动须同步拷贝，diff 校验防漂移。
 
 ## 适用边界
 
