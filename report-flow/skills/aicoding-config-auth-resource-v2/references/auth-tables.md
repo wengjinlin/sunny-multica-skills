@@ -40,7 +40,7 @@ ID NUMBER PK；C_MODNUMB VARCHAR2(200)；C_MODNAME VARCHAR2(200)；C_MODDESC VAR
 | ID | 主键 | insert 省略 |
 | N_MODULEID | 所属菜单行 ID | 标量子查询 `(SELECT ID FROM AUTH_RES_MENU WHERE C_URL='/xxx/yyy')` |
 | C_URL | 后端接口 URL | 如 `/sampleLedger/selectForPage`、`/sampleLedger/insert`（拼法=Controller 映射+方法名，以 design.md 接口清单为准） |
-| C_TYPE | 类型 | `1`菜单接口 `2`按钮接口 `-1`系统通用/everyone |
+| C_TYPE | 类型 | **恒为 `1`**（所有接口行统一写 1，不区分查询/写接口，观测现库亦全为 1） |
 | C_DESC | 接口描述 | 中文 |
 | 其余 | C_CRENUMB / D_CREDATE(sysdate) / TS / N_CLICKNUM(0) | 省略/默认 |
 
@@ -86,7 +86,7 @@ ID NUMBER PK；C_NAME VARCHAR2(200)；N_PARKEYID NUMBER；C_CRENUMB VARCHAR2(100
 | C_FIELDTYPE | 组件类型 | Input/Select/date/datetime/year/Cascader/spanselect/Index/InputSearch（initFormItem/initTableColumn switch 实证）；与 design.md 字段清单一致 |
 | C_PROP | 后端传参 key | 表格 field / 表单 model key，= 后端查询参数名 |
 | C_SELTYPE / C_SELVAL | 下拉类型/取值 | 0:数据字典 1:selectOption 2:工厂 3:自定义下拉 4:其它权限——下拉类字段必填，值从 design.md |
-| C_SIGN / C_SHOW | 启用/显示 | '1'/'0'（C_SHOW 同菜单反向：0=显示） |
+| C_SIGN / C_SHOW | 启用/显示 | C_SIGN='1'；**C_SHOW 默认写 '0'**（同菜单反向语义：0=显示，1=隐藏） |
 | C_REQUIRED | 校验 | 0:校验 |
 | N_ORDER | 排序 | 按清单顺序 |
 | C_WIDTH / C_ALIGN / N_LG | 宽度/对齐/栅格 | 可空 |

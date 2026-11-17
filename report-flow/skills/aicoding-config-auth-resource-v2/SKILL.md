@@ -40,7 +40,7 @@ metadata:
 | 表 | 角色 | 关键列 |
 |---|---|---|
 | `AUTH_RES_MENU` 资源菜单表 | **菜单树**：一级目录 + 页面行，驱动前端路由与菜单栏 | `C_VIEWPATH`、`C_VIEWNAME`、`N_PARKEYID`、`C_TYPE`、`C_SHOW` |
-| `AUTH_MODULE_URL` 菜单URL表 | **后端接口 URL 登记**：每 API 一行，`N_MODULEID` 挂菜单行 | `C_URL`、`N_MODULEID`、`C_TYPE`(1菜单/2按钮/-1 everyone) |
+| `AUTH_MODULE_URL` 菜单URL表 | **后端接口 URL 登记**：每 API 一行，`N_MODULEID` 挂菜单行 | `C_URL`、`N_MODULEID`、`C_TYPE`(恒为1) |
 | `AUTH_RES_BUTTON` 资源按钮表 | **工具栏/操作列按钮登记**，`N_PARKEYID` 挂菜单行 | `C_NAME`、`C_AREA`('searchTable')、`C_STOREMETHOD`(handle)、`C_SUB_AREA`、`C_ICON`(固定映射) |
 | `AUTH_RES_FIELD` 资源字段表 | **老框架列表页必需**：查询表单字段 + 表格列由资源行驱动 | `C_LABEL`、`C_PROP`、`C_FIELDTYPE`、`C_AREA`('searchForm'/'searchTable') |
 | `AUTH_ROLE_RESOURCE_URL` 角色资源url表(缓存) | **API 鉴权放行缓存**——业务模块永不直写，UI 角色绑定产物 | 只读知识，不出现在生成物 |
@@ -75,13 +75,13 @@ metadata:
 
 ## 字段资源行（老框架特有，v3 无此节）
 
-`src/mixins/list.js`（列表页标配）从 `getCurrentUserResourcesByParId` 返回的 `resFieldList` 构建查询表单与表格列：`C_AREA='searchForm'` → 查询表单项，`C_AREA='searchTable'` → 表格列。**无字段资源行 = 页面表单与表格全空**——老框架新列表页必须生成 AUTH_RES_FIELD 行（行数 = design.md 字段清单），只读页/弹窗页按 design.md 判断是否需要。字段行关键字段：`C_LABEL`（中文名）、`C_PROP`（后端传参 key）、`C_FIELDTYPE`（Input/Select/date/datetime/year/Cascader/spanselect/Index…）、`N_PARKEYID`=页面菜单行 ID、`C_SYSTEM`=目标系统标识；下拉类需 `C_SELTYPE`/`C_SELVAL`，缺实证值的枚举问 PM 不猜。
+`src/mixins/list.js`（列表页标配）从 `getCurrentUserResourcesByParId` 返回的 `resFieldList` 构建查询表单与表格列：`C_AREA='searchForm'` → 查询表单项，`C_AREA='searchTable'` → 表格列。**无字段资源行 = 页面表单与表格全空**——老框架新列表页必须生成 AUTH_RES_FIELD 行（行数 = design.md 字段清单），只读页/弹窗页按 design.md 判断是否需要。字段行关键字段：`C_LABEL`（中文名）、`C_PROP`（后端传参 key）、`C_FIELDTYPE`（Input/Select/date/datetime/year/Cascader/spanselect/Index…）、`N_PARKEYID`=页面菜单行 ID、`C_SYSTEM`=目标系统标识；`C_SHOW` 默认写 '0'（反向语义：0=显示）；下拉类需 `C_SELTYPE`/`C_SELVAL`，缺实证值的枚举问 PM 不猜。
 
 ## 标准模式 → 资源行对应（模板见 [references/sql-templates.md](references/sql-templates.md)）
 
 | design.md 页面形态 | 菜单树 | AUTH_MODULE_URL | AUTH_RES_BUTTON | AUTH_RES_FIELD |
 |---|---|---|---|---|
-| 查询列表页（list mixin）+ add 按钮 | 页面行 ×1（挂一级目录下，C_TEMPLATETYPE='0'） | 查询接口 ×1（C_TYPE=1）+ 写接口 ×1（C_TYPE=2） | 按钮行 ×1（C_NAME='新增'，C_STOREMETHOD='add'，C_ICON='sunnyfont baseicon-add'） | 表单字段行 + 表格列字段行（按字段清单） |
+| 查询列表页（list mixin）+ add 按钮 | 页面行 ×1（挂一级目录下，C_TEMPLATETYPE='0'） | 查询接口 ×1 + 写接口 ×1（AUTH_MODULE_URL 全部 C_TYPE=1） | 按钮行 ×1（C_NAME='新增'，C_STOREMETHOD='add'，C_ICON='sunnyfont baseicon-add'） | 表单字段行 + 表格列字段行（按字段清单） |
 | 只读查询页 | 页面行 ×1 | 查询接口 ×1（C_TYPE=1） | 无 | 按需（页面消费 resFieldList 则生成） |
 | 新业务域一级目录 | 目录行 ×1（C_VIEWPATH='Layout'，N_PARKEYID=0） | — | — | — |
 

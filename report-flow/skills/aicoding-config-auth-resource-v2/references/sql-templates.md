@@ -45,7 +45,7 @@ SELECT C_MODNAME, C_ICON FROM AUTH_RES_MENU WHERE C_ICON IS NOT NULL AND ROWNUM 
 -- 2. 菜单树：页面行（C_VIEWPATH 直读 views，N_PARKEYID 挂目录行）
 <页面 MERGE × 每页面>
 
--- 3. 接口登记：AUTH_MODULE_URL（N_MODULEID 子查询挂页面行；C_TYPE 1=查询 2=按钮写接口）
+-- 3. 接口登记：AUTH_MODULE_URL（N_MODULEID 子查询挂页面行；C_TYPE 恒为 '1'，所有接口行统一）
 <接口 MERGE × 每接口>
 
 -- 4. 按钮资源：AUTH_RES_BUTTON（工具栏无 C_SUB_AREA；操作列 C_SUB_AREA='columnTable'；C_ICON 按固定映射）
@@ -141,7 +141,7 @@ WHEN NOT MATCHED THEN
           s.c_url, '1', '{页面中文名}-分页查询');
 ```
 
-`C_TYPE='2'` 用于按钮写接口；接口 URL 以 design.md 接口清单为准（Controller 映射+方法名）。
+`C_TYPE` 恒为 `'1'`（所有接口行统一写 1，不区分查询/写接口）；接口 URL 以 design.md 接口清单为准（Controller 映射+方法名）。
 
 ## 按钮登记 MERGE（AUTH_RES_BUTTON，每按钮一份）
 
@@ -187,7 +187,7 @@ WHEN NOT MATCHED THEN
 
 - 判重键 = `N_PARKEYID + C_PROP + C_AREA`（同字段可同时出表单+表格两行）。
 - `C_FIELDTYPE` 与 design.md 字段清单一致（Input/Select/date/datetime/year/Cascader/spanselect…）；下拉类（Select/spanselect/Cascader）`C_SELTYPE`+`C_SELVAL` 必填（0:数据字典 1:selectOption 2:工厂 3:自定义下拉 4:其它权限），无实证值问 PM 不猜。
-- **C_SHOW 同反向语义：0=显示**；未实证列（C_META/C_WIDTH/N_LG/C_DYNAMIC_*）留空，观测现有行有惯例值则对齐。
+- **C_SHOW 默认写 '0'**（反向语义：0=显示，1=隐藏）；未实证列（C_META/C_WIDTH/N_LG/C_DYNAMIC_*）留空，观测现有行有惯例值则对齐。
 - 一个查询列表页通常 = 表单字段行 N + 表格列行 M（design.md 字段清单定）。
 
 ## 放行说明段（无 SQL，固定注释模板）
@@ -203,8 +203,8 @@ WHEN NOT MATCHED THEN
 
 | design.md 内容 | 产物 |
 |---|---|
-| 路由一条 `/a/b`（查询列表页，组件 `views/a/b.vue` name `BQuery`） | 菜单页面行 1（C_VIEWPATH=`/a/b`，C_VIEWNAME=`BQuery`，C_TEMPLATETYPE='0'）+ AUTH_MODULE_URL 查询行 1（C_TYPE=1）+ 字段行 N+M |
-| 该页有 add 按钮且 Controller 有 insert | + AUTH_MODULE_URL 写接口行 1（C_TYPE=2）+ AUTH_RES_BUTTON 行 1（C_STOREMETHOD='add'，C_ICON='sunnyfont baseicon-add'） |
+| 路由一条 `/a/b`（查询列表页，组件 `views/a/b.vue` name `BQuery`） | 菜单页面行 1（C_VIEWPATH=`/a/b`，C_VIEWNAME=`BQuery`，C_TEMPLATETYPE='0'）+ AUTH_MODULE_URL 查询行 1 + 字段行 N+M |
+| 该页有 add 按钮且 Controller 有 insert | + AUTH_MODULE_URL 写接口行 1（C_TYPE 恒为 '1'）+ AUTH_RES_BUTTON 行 1（C_STOREMETHOD='add'，C_ICON='sunnyfont baseicon-add'） |
 | 操作列按钮（行内） | + AUTH_RES_BUTTON 行（C_SUB_AREA='columnTable'） |
 | 只读页（无按钮无字段消费） | 仅查询接口相关行 |
 | 新业务域一级目录 | 目录行 1（C_VIEWPATH='Layout'，N_PARKEYID=0） |
