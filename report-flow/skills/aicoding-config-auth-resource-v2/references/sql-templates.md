@@ -124,10 +124,10 @@ WHEN NOT MATCHED THEN
   INSERT (C_MODNUMB, C_MODNAME, C_MODDESC, N_PARKEYID, C_TYPE, C_URL, C_VIEWPATH, C_VIEWNAME, C_SHOW, C_SIGN, C_ICON, N_ORDER, C_AUTH, C_TEMPLATETYPE, C_SYSTEM)
   VALUES ('{C_MODNUMB形态}', '{页面中文名}', '{页面中文名}',
           (SELECT ID FROM AUTH_RES_MENU WHERE C_URL = '/{模块路由前缀}' AND N_PARKEYID = 0),
-          '1', s.c_url, '/{views下相对路径不含.vue}', '{组件name}', '0', '1', '{图标}', 0, '1', '{列表页则0，否则NULL}', '{系统标识}');
+          '1', s.c_url, '/{views下相对路径不含.vue}', '{组件name}', '0', '1', '{图标}', 0, '1', '{模板类型：查询页0/tabs1/Form2/Form+Table可编辑3/Form+Tabs4/自定义-1}', '{系统标识}');
 ```
 
-要点：`C_VIEWPATH` 以 `/` 开头、不含 .vue、从 `src/views/` 起算（require 直读，错路径点菜单无响应）；`C_VIEWNAME` = 组件 `name`（keepAlive 唯一）；查询列表页 `C_TEMPLATETYPE='0'`；父行定位用 N_PARKEYID=0 条件（目录行唯一）。
+要点：`C_VIEWPATH` 以 `/` 开头、不含 .vue、从 `src/views/` 起算（require 直读，错路径点菜单无响应）；`C_VIEWNAME` = 组件 `name`（keepAlive 唯一）；`C_TEMPLATETYPE` 按 design.md 页面形态取：`0`=查询页（Form+Table）、`1`=tabs 标签页、`2`=Form、`3`=Form+Table(可编辑)、`4`=Form+Tabs、`-1`=自定义模板（不属于以上的），查询列表页写 0；父行定位用 N_PARKEYID=0 条件（目录行唯一）。
 
 ## 接口登记 MERGE（AUTH_MODULE_URL，每接口一份）
 

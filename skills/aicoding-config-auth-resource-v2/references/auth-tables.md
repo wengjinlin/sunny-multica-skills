@@ -23,7 +23,7 @@
 | C_NEXTLEVEL | 是否有下级 | 0:没有 1:有，按层级写 |
 | N_ORDER | 排序 | 可 0 |
 | C_ICON | 图标 | 三体系（Item.vue 实证）：值含 `baseicon-`/`el-icon-`/`iconfont` → `<i class>` 字体图标直用；否则 = 本地 svg 文件名（`src/icons/svg/` 26 个：ai/aizhoushu/computer/dashboard/example/form/keyboard/link/mobile/nested/password/setting/table/tree/user…）。**无 lucide**。按现库同类行观测对齐，无把握留空 |
-| C_TEMPLATETYPE | 模板类型 | `0`=上下结构查询页（list mixin 读 `resMenu.cTemplatetype==='0'` 开启显示设置）——查询列表页菜单行写 0 |
+| C_TEMPLATETYPE | 模板类型 | `0`=查询页（Form+Table 查询页，list mixin 读 `resMenu.cTemplatetype==='0'` 开启显示设置）；`1`=tabs 标签页；`2`=Form；`3`=Form+Table(可编辑)；`4`=Form+Tabs；`-1`=自定义模板（不属于以上的写 -1）。按 design.md 页面形态取值，查询列表页菜单行写 0 |
 | C_AUTH | 角色权限 | 1=启用 0=不启用，默认 1 |
 | 其余 | C_CRENUMB/D_CREDATE(sysdate)/C_SYSTEM/N_LEVEL/C_META/TS/N_SEARCHFORMLG/N_DEFROLEID/C_ADRES_CLASS/N_SENSITIVE | 按现有行；**C_SYSTEM = 目标系统标识**：取目标前端 `.env` 的 `VUE_APP_CURRENT_SYSTEM` 值（各仓库不同，**不硬编码**；以第 0 段现库现有行观测复核） |
 

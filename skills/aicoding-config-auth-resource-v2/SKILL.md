@@ -60,7 +60,7 @@ metadata:
 - **按钮 handle 承载列 = `C_STOREMETHOD`**（`handle: cStoremethod`），页面按 `bt.handle === 'xxx'` 分发。`C_CALLMETHOD` 是调后端方法配置列（导出方法/导入接口），不是 handle。
 - **handle 实证值**（一手代码）：新增 `add`、查询 `search`、重置 `reset`、删除 `del`、导入显示 `daoru/show`、导出显示 `daochu/show`；大量页面自定义形态为 `模块/动作`（如 `material/tab2Add`）——**新按钮 handle 必须与 design.md 页面代码分发串一致，无代码实证的操作先观测现库同类行，无参照列封闭式问题问发起人，不猜**
 - `C_AREA='searchTable'`（一手实证，非字典误拼 searchTabel）；`C_SUB_AREA='columnTable'` = 操作列按钮（列表行内按钮）；无 C_SUB_AREA = 工具栏按钮
-- `resMenu.cTemplatetype === '0'` 开启「上下结构查询页」模板与显示设置——列表页菜单行 `C_TEMPLATETYPE='0'`
+- `C_TEMPLATETYPE` 取值（页面行按 design.md 页面形态定）：`0`=查询页（Form+Table，list mixin 读 `resMenu.cTemplatetype==='0'` 开启上下结构查询页模板与显示设置）；`1`=tabs 标签页；`2`=Form；`3`=Form+Table(可编辑)；`4`=Form+Tabs；`-1`=自定义模板（不属于以上的写 -1）。目录行留空
 - **按钮 C_ICON 固定映射（硬规范，不做语义匹配、不观测）**：
 
 | 操作 | 图标 |
