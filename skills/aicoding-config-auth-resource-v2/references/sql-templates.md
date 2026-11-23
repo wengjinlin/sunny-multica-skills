@@ -180,13 +180,13 @@ USING (SELECT (SELECT ID FROM AUTH_RES_MENU WHERE C_URL = '/{模块路由前缀}
 ON (t.N_PARKEYID = s.menu_id AND t.C_PROP = '{后端参数key}' AND t.C_AREA = '{searchForm或searchTable}')
 WHEN NOT MATCHED THEN
   INSERT (C_LABEL, N_PARKEYID, C_AREA, C_FIELDTYPE, C_PROP, C_SELTYPE, C_SELVAL, C_SIGN, C_SHOW, C_REQUIRED, N_ORDER, C_SYSTEM)
-  VALUES ('{字段中文名}', s.menu_id, '{searchForm或searchTable}', '{组件类型}', '{后端参数key}', '{下拉类必填，否则NULL}', '{下拉取值}', '1', '0', '{需校验则0否则NULL}', {序号}, '{系统标识}');
+  VALUES ('{字段中文名}', s.menu_id, '{searchForm或searchTable}', '{searchForm行按表单组件类型；searchTable行默认span}', '{后端参数key}', '{下拉类必填，否则NULL}', '{下拉取值}', '1', '0', '{需校验则0否则NULL}', {序号}, '{系统标识}');
 ```
 
 要点：
 
 - 判重键 = `N_PARKEYID + C_PROP + C_AREA`（同字段可同时出表单+表格两行）。
-- `C_FIELDTYPE` 与 design.md 字段清单一致（Input/Select/date/datetime/year/Cascader/spanselect…）；下拉类（Select/spanselect/Cascader）`C_SELTYPE`+`C_SELVAL` 必填（0:数据字典 1:selectOption 2:工厂 3:自定义下拉 4:其它权限），无实证值问 PM 不猜。
+- `C_FIELDTYPE` 权威枚举（FormFieldTypes 字典 cKeynumb）：`span`/`Input`/`InputNumber`/`InputSearch`/`SelectSearch`/`Autocomplete`/`Select`/`Cascader`/`RadioGroup`/`Checkbox`/`Switch`/`date`/`datetime`/`daterange`/`datetimerange`/`month`/`monthrange`/`year`/`Index`/`Slot`（文本域=Input+cMeta{type:'textarea'}、多选=Select+cMeta{multiple:true}，非独立取值）；searchForm 行与 design.md 字段清单一致，**searchTable 表格列行默认一律 `span`**；下拉类（Select/SelectSearch/Cascader）`C_SELTYPE`+`C_SELVAL` 必填（0:数据字典 1:selectOption 2:工厂 3:自定义下拉 4:其它权限），无实证值问 PM 不猜。
 - **C_SHOW 默认写 '0'**（反向语义：0=显示，1=隐藏）；未实证列（C_META/C_WIDTH/N_LG/C_DYNAMIC_*）留空，观测现有行有惯例值则对齐。
 - 一个查询列表页通常 = 表单字段行 N + 表格列行 M（design.md 字段清单定）。
 

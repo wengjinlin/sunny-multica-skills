@@ -75,7 +75,7 @@ metadata:
 
 ## 字段资源行（老框架特有，v3 无此节）
 
-`src/mixins/list.js`（列表页标配）从 `getCurrentUserResourcesByParId` 返回的 `resFieldList` 构建查询表单与表格列：`C_AREA='searchForm'` → 查询表单项，`C_AREA='searchTable'` → 表格列。**无字段资源行 = 页面表单与表格全空**——老框架新列表页必须生成 AUTH_RES_FIELD 行（行数 = design.md 字段清单），只读页/弹窗页按 design.md 判断是否需要。字段行关键字段：`C_LABEL`（中文名）、`C_PROP`（后端传参 key）、`C_FIELDTYPE`（Input/Select/date/datetime/year/Cascader/spanselect/Index…）、`N_PARKEYID`=页面菜单行 ID、`C_SYSTEM`=目标系统标识；`C_SHOW` 默认写 '0'（反向语义：0=显示）；下拉类需 `C_SELTYPE`/`C_SELVAL`，缺实证值的枚举问 PM 不猜。
+`src/mixins/list.js`（列表页标配）从 `getCurrentUserResourcesByParId` 返回的 `resFieldList` 构建查询表单与表格列：`C_AREA='searchForm'` → 查询表单项，`C_AREA='searchTable'` → 表格列。**无字段资源行 = 页面表单与表格全空**——老框架新列表页必须生成 AUTH_RES_FIELD 行（行数 = design.md 字段清单），只读页/弹窗页按 design.md 判断是否需要。字段行关键字段：`C_LABEL`（中文名）、`C_PROP`（后端传参 key）、`C_FIELDTYPE`（权威枚举=FormFieldTypes 字典 cKeynumb：span/Input/InputNumber/InputSearch/SelectSearch/Autocomplete/Select/Cascader/RadioGroup/Checkbox/Switch/date/datetime/daterange/datetimerange/month/monthrange/year/Index/Slot；**searchTable 表格列行默认一律写 `span`**，searchForm 行按 design.md 组件类型）、`N_PARKEYID`=页面菜单行 ID、`C_SYSTEM`=目标系统标识；`C_SHOW` 默认写 '0'（反向语义：0=显示）；下拉类需 `C_SELTYPE`/`C_SELVAL`，缺实证值的枚举问 PM 不猜。
 
 ## 标准模式 → 资源行对应（模板见 [references/sql-templates.md](references/sql-templates.md)）
 

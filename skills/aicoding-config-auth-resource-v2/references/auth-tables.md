@@ -83,7 +83,7 @@ ID NUMBER PK；C_NAME VARCHAR2(200)；N_PARKEYID NUMBER；C_CRENUMB VARCHAR2(100
 | C_LABEL | 字段中文名 | 表单 label / 表格 title |
 | N_PARKEYID | 页面菜单行 ID | 标量子查询取 |
 | C_AREA | 所在区域 | `searchForm`（查询表单）/ `searchTable`（表格列） |
-| C_FIELDTYPE | 组件类型 | Input/Select/date/datetime/year/Cascader/spanselect/Index/InputSearch（initFormItem/initTableColumn switch 实证）；与 design.md 字段清单一致 |
+| C_FIELDTYPE | 组件类型 | 权威枚举（FormFieldTypes 字典，cKeynumb 即取值）：`span`(文本)、`Input`(输入框)、`InputNumber`(计数器)、`InputSearch`(放大镜输入框)、`SelectSearch`(选择框输入框)、`Autocomplete`(建议输入框)、`Select`(单项选择器)、`Cascader`(级联选择器)、`RadioGroup`(单选框)、`Checkbox`(多选框)、`Switch`(开关)、`date`(yyyy-MM-dd)、`datetime`(yyyy-MM-dd HH:mm:ss)、`daterange`(yyyy-MM-dd)、`datetimerange`(yyyy-MM-dd HH:mm:ss)、`month`(yyyy-MM)、`monthrange`(yyyy-MM)、`year`(yyyy)、`Index`(行序号,不传后端)、`Slot`(自定义内容)。非独立取值：文本域=`Input`+cMeta{type:'textarea'}、多选=`Select`+cMeta{multiple:true}。**`C_AREA='searchTable'` 表格列行（list 查询页表格字段）默认一律写 `span`**；searchForm 行按 design.md 字段清单组件类型取值 |
 | C_PROP | 后端传参 key | 表格 field / 表单 model key，= 后端查询参数名 |
 | C_SELTYPE / C_SELVAL | 下拉类型/取值 | 0:数据字典 1:selectOption 2:工厂 3:自定义下拉 4:其它权限——下拉类字段必填，值从 design.md |
 | C_SIGN / C_SHOW | 启用/显示 | C_SIGN='1'；**C_SHOW 默认写 '0'**（同菜单反向语义：0=显示，1=隐藏） |
