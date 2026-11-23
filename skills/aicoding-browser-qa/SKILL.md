@@ -20,7 +20,27 @@ B="$HOME/.claude/skills/gstack/browse/dist/browse"
 - `status` 异常 / 二进制不存在 / Chromium 启动失败 → **降级模式**：跳过 §3 浏览器操作，按 §4 清单以代码走读 + 接口验证替代，报告注明「降级：基座不可用」。不阻断、不因此中止测试。
 - 目标 URL（含内网 192.168.x.x）连不通 → 同样降级并在报告列可达性待办。
 - **凭据检查**：读自身**进程环境变量**（$TEST_ACCOUNT / $TEST_PASSWORD / $TEST_ROLE；agent 无权用 CLI 查询 env，不要尝试）——缺失 → 无法登录，按降级模式处理，报告「环境阻塞」节写人话提示（无命令）：「测试账号未配置——请在 Multica 网页 → Tester agent 详情 → 环境变量 中配置：TEST_ACCOUNT（测试账号名）、TEST_PASSWORD（测试账号密码）、TEST_ROLE（测试账号所属角色名）；值不入评论」。凭据值禁入报告/评论。
-- **目标地址口径**：本机起的服务从仓库配置自解析端口；远程联调地址查仓库 CLAUDE.md §3 基础设施节或 issue 验收点——地址不入 env（非敏感）。
+- **目标地址口径**：未合并 change（MR 未合入）默认走本地链路（§1.5），被测地址 `http://localhost:<前端devServer端口>`；远程联调地址（仓库 CLAUDE.md §3 基础设施节）仅用于部署态补充验证（菜单权限可见性等），不得作为未合并 change 页面功能 QA 的依据——地址不入 env（非敏感）。
+
+## 1.5 本地链路启动（未合并 change 页面 QA 默认路径）
+
+被测 change 的前后端产物不在远程环境上——先在本地把前后端跑起来再测：
+
+1. **后端本地起**（当前 change 分支；连 test 环境基础设施，配置见 `sunny-mdm-service/src/main/resources/application-dev.yml`；DDL 已在 test 库执行过，直接复用）：
+   ```bash
+   cd sunny-mdm-service && mvn spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
+   启动成功标志：日志出现 8085 端口监听/启动完成行。起不来（依赖不可达/编译失败/长时间无输出）→ 记录失败原因与日志尾行，按 §1 降级模式处理
+2. **前端本地起**（当前 change 分支）：
+   ```bash
+   cd sunny-mdm-web && npm install
+   # 临时把 vue.config.js 里 devServer proxy 的 target 由 http://10.192.71.126:8085 改为 http://localhost:8085（文本替换，不提交）
+   npm run dev
+   ```
+   端口从 devServer 启动输出解析
+3. **测完必须还原**（防止 proxy 临时改动混入后续 commit）：`git checkout -- sunny-mdm-web/vue.config.js`
+4. **证据**：qa/ 目录除截图外附本地链路证据——后端启动日志尾行、devServer 地址、浏览器会话 URL（应为 localhost）
+5. 远程 test 环境仍可访问，但仅做部署态补充断言（菜单权限可见性）；不得以「远程未部署本 change」为由跳过本地链路
 
 ## 2. 三档深度（issue 指定档位，缺省 Standard）
 

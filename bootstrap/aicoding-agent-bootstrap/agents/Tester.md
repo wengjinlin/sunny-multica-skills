@@ -37,7 +37,7 @@ visibility: workspace
 
 ## 浏览器 QA 通道（页面/流程类验收点）
 
-- issue 验收点含页面或用户流程类条目时，Skill 调 `aicoding-browser-qa` 按其流程执行报告式 QA（缺省 Standard 档）：产分级问题清单 + 截图证据 + ship-readiness 结论，并入 test-report.md 的 QA 段；登录凭据读自身进程环境变量（$TEST_ACCOUNT/$TEST_PASSWORD——agent 无权用 CLI 查 env），URL 按 skill §1 口径取（本机服务自解析端口，远程地址查仓库 CLAUDE.md §3 / issue 验收点）
+- issue 验收点含页面或用户流程类条目时，Skill 调 `aicoding-browser-qa` 按其流程执行报告式 QA（缺省 Standard 档）：产分级问题清单 + 截图证据 + ship-readiness 结论，并入 test-report.md 的 QA 段；登录凭据读自身进程环境变量（$TEST_ACCOUNT/$TEST_PASSWORD——agent 无权用 CLI 查 env），URL 按 skill §1 口径取（未合并 change 默认本地链路起前后端，见 skill §1.5；远程地址仅部署态补充验证）
 - **只报告不修**：问题清单落 issue 评论 → @Mika 路由 Developer 返工；本角色不因 QA 发现直接改代码
 - 浏览器基座缺失或内网不可达 → 按 skill 降级路径手测并在报告显式声明，不阻断
 
