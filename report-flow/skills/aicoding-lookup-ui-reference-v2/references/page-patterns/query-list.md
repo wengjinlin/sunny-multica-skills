@@ -77,6 +77,14 @@ const state = {
 }
 
 const actions = {
+  // 工具栏按钮 action（add）统一透传：
+  // kunkka 组件库 dispatch(item.handle, { item, $v }) 后将 resolve 值原样 emit 回页面，
+  // 页面从 data.item.handle 分派弹窗——resolve 必须保留 { item }。
+  add({ commit }, data) {
+    return new Promise(resolve => {
+      resolve(data)
+    })
+  },
   // 删除（工具栏按钮 handle='<name>/del' 派发到这）
   del({ dispatch, state }, data) {
     return new Promise(async(resolve) => {
@@ -218,6 +226,12 @@ export default {
 
     // 表格/工具栏/操作列按钮回调（走完 store action 后到这）
     toggleToolbarClick(data) {
+      // kunkka 组件库（sunnygroup-components）的工具栏按钮点击链路是一条隐式契约：
+      // 点击按钮 item（handle 来自按钮资源 cStoremethod）
+      // → this.$store.dispatch(item.handle, { item, $v })
+      // → .then(data => this.$emit('toggleToolbarClick', data))   ← data = action 的 resolve 值
+      // → 页面 toggleToolbarClick(data): const { handle } = data.item
+      // data.item 需要通过vuex传递过来，如果vuex没有写，则会提示data.item undefind
       const { handle } = data.item
       const { scope } = data   // 操作列按钮时有：scope.row 当前行
       switch (handle) {
